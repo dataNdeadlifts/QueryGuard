@@ -1,6 +1,6 @@
 import pytest
 
-from sql_enforcer.rules import BaseRule
+from QueryGuard.rules import BaseRule
 
 
 class TestBaseRule:

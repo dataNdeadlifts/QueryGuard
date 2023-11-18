@@ -1,8 +1,8 @@
 import pytest
 
-from sql_enforcer.exceptions import RuleViolation
-from sql_enforcer.parser import SQLParser
-from sql_enforcer.rules import NoCreateLoginRule
+from QueryGuard.exceptions import RuleViolation
+from QueryGuard.parser import SQLParser
+from QueryGuard.rules import NoCreateLoginRule
 
 
 class TestNoCreateLoginRule:

@@ -6,8 +6,8 @@ from typing import NoReturn
 
 import sqlparse
 
-from sql_enforcer.exceptions import RuleViolation
-from sql_enforcer.parser import SQLParser
+from QueryGuard.exceptions import RuleViolation
+from QueryGuard.parser import SQLParser
 
 logger = logging.getLogger(__name__)
 
@@ -63,8 +63,7 @@ class BaseRule(ABC):
 
 
 class NoCreateLoginRule(BaseRule):
-    """
-    A rule that checks for any SQL statements that create a login.
+    """Checks for any SQL statements that create a login.
 
     This rule checks for the following statements:
     - CREATE LOGIN
@@ -92,8 +91,7 @@ class NoCreateLoginRule(BaseRule):
 
 
 class NoDropLoginRule(BaseRule):
-    """
-    A rule that checks for any SQL statements that drop a login, and raises a RuleViolation exception if found.
+    """Checks for any SQL statements that drop a login, and raises a RuleViolation exception if found.
 
     This rule checks for the following statements:
     - DROP LOGIN
@@ -121,8 +119,7 @@ class NoDropLoginRule(BaseRule):
 
 
 class NoAlterLoginRule(BaseRule):
-    """
-    A rule that checks for any SQL statements that alter a login, and raises a RuleViolation exception if found.
+    """Checks for any SQL statements that alter a login, and raises a RuleViolation exception if found.
 
     This rule checks for the following statements:
     - ALTER LOGIN
@@ -151,8 +148,7 @@ class NoAlterLoginRule(BaseRule):
 
 
 class NoCreateServerRoleRule(BaseRule):
-    """
-    A rule that checks for any SQL statements that create a server role, and raises a RuleViolation exception if found.
+    """Checks for any SQL statements that create a server role, and raises a RuleViolation exception if found.
 
     This rule checks for the following statements:
     - CREATE SERVER ROLE
@@ -168,8 +164,7 @@ class NoCreateServerRoleRule(BaseRule):
 
 
 class NoDropServerRoleRule(BaseRule):
-    """
-    A rule that checks for any SQL statements that drop a server role, and raises a RuleViolation exception if found.
+    """Checks for any SQL statements that drop a server role, and raises a RuleViolation exception if found.
 
     This rule checks for the following statements:
     - DROP SERVER ROLE
@@ -185,8 +180,7 @@ class NoDropServerRoleRule(BaseRule):
 
 
 class NoAlterServerRoleRule(BaseRule):
-    """
-    A rule that checks for any SQL statements that alter a server role, and raises a RuleViolation exception if found.
+    """Checks for any SQL statements that alter a server role, and raises a RuleViolation exception if found.
 
     This rule checks for the following statements:
     - ALTER SERVER ROLE
@@ -210,9 +204,7 @@ class NoAlterServerRoleRule(BaseRule):
 
 
 class NoCreateDatabaseRoleRule(BaseRule):
-    """
-    A rule that checks for any SQL statements that create a database role,
-    and raises a RuleViolation exception if found.
+    """Checks for any SQL statements that create a database role, and raises a RuleViolation exception if found.
 
     This rule checks for the following statements:
     - CREATE ROLE
@@ -236,8 +228,7 @@ class NoCreateDatabaseRoleRule(BaseRule):
 
 
 class NoDropDatabaseRoleRule(BaseRule):
-    """
-    A rule that checks for any SQL statements that drop a database role, and raises a RuleViolation exception if found.
+    """Checks for any SQL statements that drop a database role, and raises a RuleViolation exception if found.
 
     This rule checks for the following statements:
     - DROP ROLE
@@ -261,8 +252,7 @@ class NoDropDatabaseRoleRule(BaseRule):
 
 
 class NoAlterDatabaseRoleRule(BaseRule):
-    """
-    A rule that checks for any SQL statements that alter a database role, and raises a RuleViolation exception if found.
+    """Checks for any SQL statements that alter a database role, and raises a RuleViolation exception if found.
 
     This rule checks for the following statements:
     - ALTER ROLE
@@ -290,9 +280,7 @@ class NoAlterDatabaseRoleRule(BaseRule):
 
 
 class NoCreateAppRoleRule(BaseRule):
-    """
-    A rule that checks for any SQL statements that create an application role,
-    and raises a RuleViolation exception if found.
+    """Checks for any SQL statements that create an application role, and raises a RuleViolation exception if found.
 
     This rule checks for the following statements:
     - CREATE APPLICATION ROLE
@@ -312,9 +300,7 @@ class NoCreateAppRoleRule(BaseRule):
 
 
 class NoDropAppRoleRule(BaseRule):
-    """
-    A rule that checks for any SQL statements that drop an application role,
-    and raises a RuleViolation exception if found.
+    """Checks for any SQL statements that drop an application role, and raises a RuleViolation exception if found.
 
     This rule checks for the following statements:
     - DROP APPLICATION ROLE
@@ -334,9 +320,7 @@ class NoDropAppRoleRule(BaseRule):
 
 
 class NoAlterAppRoleRule(BaseRule):
-    """
-    A rule that checks for any SQL statements that alter an application role,
-    and raises a RuleViolation exception if found.
+    """Checks for any SQL statements that alter an application role, and raises a RuleViolation exception if found.
 
     This rule checks for the following statements:
     - ALTER APPLICATION ROLE
@@ -356,8 +340,7 @@ class NoAlterAppRoleRule(BaseRule):
 
 
 class NoDynamicSQLRule(BaseRule):
-    """
-    A rule that checks for any SQL statements that use dynamic sql, and raises a RuleViolation exception if found.
+    """Checks for any SQL statements that use dynamic sql, and raises a RuleViolation exception if found.
 
     This rule checks for the following statements:
     - EXEC (string)

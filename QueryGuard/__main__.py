@@ -1,6 +1,6 @@
 import logging
 
-from sql_enforcer.cli import cli
+from QueryGuard.cli import cli
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)

@@ -13,8 +13,7 @@ class SQLParser:
 
     @staticmethod
     def get_statements(query: str) -> tuple[sqlparse.sql.Statement]:
-        """
-        Parses the given SQL query and returns a tuple of sqlparse.sql.Statement objects.
+        """Parses the given SQL query and returns a tuple of sqlparse.sql.Statement objects.
 
         Args:
             query (str): The SQL query to parse.
@@ -27,8 +26,7 @@ class SQLParser:
 
     @staticmethod
     def _to_case_insensitive_regex(string: str) -> str:
-        """
-        Converts the given string to a case-insensitive regular expression.
+        """Converts the given string to a case-insensitive regular expression.
 
         Args:
             string (str): The string to convert.
@@ -42,8 +40,7 @@ class SQLParser:
     def get_ddl_statements(
         statements: tuple[sqlparse.sql.Statement], type: str
     ) -> Generator[sqlparse.sql.Statement, None, None]:
-        """
-        Yields DDL statements of the given type from the given tuple of sqlparse.sql.Statement objects.
+        """Yields DDL statements of the given type from the given tuple of sqlparse.sql.Statement objects.
 
         Args:
             statements (tuple[sqlparse.sql.Statement]): A tuple of sqlparse.sql.Statement objects.
@@ -66,8 +63,7 @@ class SQLParser:
 
     @staticmethod
     def get_exec_string(statements: tuple[sqlparse.sql.Statement]) -> Generator[sqlparse.sql.Statement, None, None]:
-        """
-        Yields EXEC statements from the given tuple of sqlparse.sql.Statement objects.
+        """Yields EXEC statements from the given tuple of sqlparse.sql.Statement objects.
 
         Args:
             statements (tuple[sqlparse.sql.Statement]): A tuple of sqlparse.sql.Statement objects.
@@ -102,8 +98,7 @@ class SQLParser:
     def get_procedure_calls(
         statements: tuple[sqlparse.sql.Statement], procedure: str
     ) -> Generator[sqlparse.sql.Statement, None, None]:
-        """
-        Yields procedure calls of the given procedure name from the given tuple of sqlparse.sql.Statement objects.
+        """Yields procedure calls of the given procedure name from the given tuple of sqlparse.sql.Statement objects.
 
         Args:
             statements (tuple[sqlparse.sql.Statement]): A tuple of sqlparse.sql.Statement objects.
@@ -127,8 +122,7 @@ class SQLParser:
 
     @staticmethod
     def acts_on_type(statement: sqlparse.sql.Statement, type: str) -> bool:
-        """
-        Determines if the given sqlparse.sql.Statement object acts on the given type.
+        """Determines if the given sqlparse.sql.Statement object acts on the given type.
 
         Args:
             statement (sqlparse.sql.Statement): The sqlparse.sql.Statement object to check.

@@ -1,14 +1,12 @@
 import typer
 
-from sql_enforcer.engine import RulesEngine
+from QueryGuard.engine import RulesEngine
 
 cli = typer.Typer()
 
 
 @cli.command()  # type: ignore[misc]
 def run(path: str) -> None:
-    """
-    QueryGuardian: A SQL policy enforcer.
-    """
+    """QueryGuard: A SQL policy guardian."""
     engine = RulesEngine()
     engine.run(path)
