@@ -1,0 +1,56 @@
+[tool.poetry]
+name = "sql-enforcer"
+version = "1.0.0-beta.1"
+description = "Evaluates SQL queries against a set of rules"
+authors = ["Tyler Klier <tylerklier@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+sqlparse = "^0.4.4"
+rich = "^13.6.0"
+typer = "^0.9.0"
+dynaconf = "^3.2.4"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+coverage = "^7.3.2"
+pre-commit = "^3.5.0"
+
+[tool.ruff]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+    # flake8-annotations
+    "ANN",
+    # flake8-bandit
+    "S",
+    # flake8-future-annotations
+    "FA",
+    # RUFF
+    "RUF",
+]
+line-length = 120
+target-version = "py38"
+ignore = ["ANN101"]
+
+[tool.mypy]
+strict = true
+
+[[tool.mypy.overrides]]
+module = ["sqlparse",]
+ignore_missing_imports = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

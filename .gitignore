@@ -1,0 +1,5 @@
+**/.*
+!.pre-commit-config.yaml
+!.gitignore
+**/htmlcov
+**/__*__/
