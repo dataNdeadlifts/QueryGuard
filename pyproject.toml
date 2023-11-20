@@ -41,7 +41,7 @@ ignore = [
 ]
 
 [tool.ruff.per-file-ignores]
-"*_test.py" = ["D"]
+"*_test.py" = ["D", "S101"]
 "rules.py" = ["D102"]
 
 [tool.ruff.lint.pydocstyle]

@@ -10,14 +10,19 @@ class RuleViolation(Exception):
         message (str): The error message that will be displayed.
     """
 
-    def __init__(self, rule: str, statement: sqlparse.sql.Statement) -> None:
+    def __init__(self, rule: str, id: str, statement: sqlparse.sql.Statement) -> None:
         """Initialize a RuleViolation Exception object.
 
         Args:
             rule (str): The rule that was violated.
+            id (str): The id of the rule that was violated.
             statement (sqlparse.sql.Statement): The SQL statement that violated the rule.
         """
         self.rule = rule
+        self.id = id
         self.statement = str(statement)[0:50]
-        self.message = f"Violated rule {self.rule}. Statement: '{str(statement)[0:50]}'"
+        self.message = f"Violated rule {self.rule} ({self.id}). Statement: '{str(statement)[0:50]}'"
         super().__init__(self.message)
+
+    def __str__(self) -> str:
+        return f"{self.rule} ({self.id})"

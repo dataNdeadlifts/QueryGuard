@@ -20,10 +20,10 @@ class BaseRule(ABC):
     """
 
     def __str__(self) -> str:
-        return "Rule: " + self.rule
+        return "Rule: " + self.rule + " (" + self.id + ")"
 
     def __repr__(self) -> str:
-        return "Rule: " + self.rule
+        return "Rule: " + self.rule + " (" + self.id + ")"
 
     @property
     @abstractmethod
@@ -32,6 +32,15 @@ class BaseRule(ABC):
 
         Returns:
             str: Rule name.
+        """
+
+    @property
+    @abstractmethod
+    def id(self) -> str:
+        """Rule id.
+
+        Returns:
+            str: Rule id.
         """
 
     @abstractmethod
@@ -59,7 +68,7 @@ class BaseRule(ABC):
             RuleViolation: If query fails a rule evaluation.
         """
         logger.debug(f"Rule {self.rule} matched statement {statement}")
-        raise RuleViolation(self.rule, statement)
+        raise RuleViolation(self.rule, self.id, statement)
 
 
 class NoCreateLoginRule(BaseRule):
@@ -73,6 +82,7 @@ class NoCreateLoginRule(BaseRule):
     """
 
     rule = "NoCreateLogin"
+    id = "S001"
 
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
@@ -101,6 +111,7 @@ class NoDropLoginRule(BaseRule):
     """
 
     rule = "NoDropLogin"
+    id = "S002"
 
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
@@ -129,6 +140,7 @@ class NoAlterLoginRule(BaseRule):
     """
 
     rule = "NoAlterLogin"
+    id = "S003"
 
     def check(self, statements: sqlparse.sql.Statement) -> None:
         super().check(statements)
@@ -155,6 +167,7 @@ class NoCreateServerRoleRule(BaseRule):
     """
 
     rule = "NoCreateServerRole"
+    id = "S004"
 
     def check(self, statements: sqlparse.sql.Statement) -> None:
         super().check(statements)
@@ -171,6 +184,7 @@ class NoDropServerRoleRule(BaseRule):
     """
 
     rule = "NoDropServerRole"
+    id = "S005"
 
     def check(self, statements: sqlparse.sql.Statement) -> None:
         super().check(statements)
@@ -189,6 +203,7 @@ class NoAlterServerRoleRule(BaseRule):
     """
 
     rule = "NoAlterServerRole"
+    id = "S006"
 
     def check(self, statements: sqlparse.sql.Statement) -> None:
         super().check(statements)
@@ -212,6 +227,7 @@ class NoCreateDatabaseRoleRule(BaseRule):
     """
 
     rule = "NoCreateDatabaseRole"
+    id = "S007"
 
     def check(self, statements: sqlparse.sql.Statement) -> None:
         super().check(statements)
@@ -236,6 +252,7 @@ class NoDropDatabaseRoleRule(BaseRule):
     """
 
     rule = "NoDropDatabaseRole"
+    id = "S008"
 
     def check(self, statements: sqlparse.sql.Statement) -> None:
         super().check(statements)
@@ -261,6 +278,7 @@ class NoAlterDatabaseRoleRule(BaseRule):
     """
 
     rule = "NoAlterDatabaseRole"
+    id = "S009"
 
     def check(self, statements: sqlparse.sql.Statement) -> None:
         super().check(statements)
@@ -288,6 +306,7 @@ class NoCreateAppRoleRule(BaseRule):
     """
 
     rule = "NoCreateAppRole"
+    id = "S010"
 
     def check(self, statements: sqlparse.sql.Statement) -> None:
         super().check(statements)
@@ -308,6 +327,7 @@ class NoDropAppRoleRule(BaseRule):
     """
 
     rule = "NoDropAppRole"
+    id = "S011"
 
     def check(self, statements: sqlparse.sql.Statement) -> None:
         super().check(statements)
@@ -328,6 +348,7 @@ class NoAlterAppRoleRule(BaseRule):
     """
 
     rule = "NoAlterAppRole"
+    id = "S012"
 
     def check(self, statements: sqlparse.sql.Statement) -> None:
         super().check(statements)
@@ -348,6 +369,7 @@ class NoDynamicSQLRule(BaseRule):
     """
 
     rule = "NoDynamicSQL"
+    id = "S013"
 
     def check(self, statements: sqlparse.sql.Statement) -> None:
         super().check(statements)

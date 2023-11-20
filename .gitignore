@@ -1,5 +1,7 @@
 **/.*
+**/*scratch*
 !.pre-commit-config.yaml
 !.gitignore
 **/htmlcov
 **/__*__/
+**/*queryguard.toml

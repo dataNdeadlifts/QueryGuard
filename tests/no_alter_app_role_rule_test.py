@@ -6,6 +6,14 @@ from QueryGuard.rules import NoAlterAppRoleRule
 
 
 class TestNoAlterAppRoleRule:
+    def test__str__(self) -> None:
+        rule = NoAlterAppRoleRule()
+        assert rule.__str__() == "Rule: NoAlterAppRole (S012)"
+
+    def test__repr__(self) -> None:
+        rule = NoAlterAppRoleRule()
+        assert rule.__repr__() == "Rule: NoAlterAppRole (S012)"
+
     def test_check_method_1(self) -> None:
         rule = NoAlterAppRoleRule()
         statements = SQLParser.get_statements("ALTER APPLICATION ROLE test_app_role WITH PASSWORD = 'test_password';")

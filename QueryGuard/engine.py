@@ -12,6 +12,7 @@ from rich.syntax import Syntax
 from rich.table import Table
 
 from QueryGuard import rules
+from QueryGuard.config import Config
 from QueryGuard.exceptions import RuleViolation
 from QueryGuard.parser import SQLParser
 
@@ -70,14 +71,20 @@ class RulesEngine:
         rules (list[type[rules.BaseRule]]): A list of subclasses of BaseRule.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, config: Config) -> None:
         """Initializes the QueryGuard engine."""
-        self.rules: list[type[rules.BaseRule]] = rules.BaseRule.__subclasses__()
+        self.config = config
+        self.rules: list[type[rules.BaseRule]] = [
+            x  # type: ignore[type-abstract]
+            for x in rules.BaseRule.__subclasses__()
+            if x.id in self.config.enabled_rules  # type: ignore[comparison-overlap]
+        ]
+        logger.debug(f"Enabled rules: {self.config.enabled_rules}")
 
     def __repr__(self) -> str:
         return "RulesEngine()"
 
-    def get_files(self, input_path: str) -> list[File]:
+    def get_files(self, input_path: Path) -> list[File]:
         """Retrieves a list of File objects from the input path.
 
         Args:
@@ -87,7 +94,7 @@ class RulesEngine:
             list[File]: A list of File objects.
         """
         logger.debug(f"Getting files from {input_path}")
-        path = Path(input_path)
+        path = input_path
         files = []
         if path.is_file():
             files.append(File(path))
@@ -99,7 +106,7 @@ class RulesEngine:
 
         return files
 
-    def run(self, input_path: str) -> None:
+    def run(self, input_path: Path) -> None:
         """Evaluates each file in the input path for adherance to the enabled rules.
 
         Args:
@@ -143,6 +150,6 @@ class RulesEngine:
             else:
                 table.add_row(str(file.path), "Failed ❌", "", "")
                 for violation in file.violations:
-                    table.add_row("", "", str(violation.rule), Syntax(violation.statement, "sql", theme="ansi_dark"))
+                    table.add_row("", "", str(violation), Syntax(violation.statement, "sql", theme="ansi_dark"))
 
         console.print(table)
