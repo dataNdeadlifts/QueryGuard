@@ -5,12 +5,14 @@ description = "A SQL policy guardian."
 authors = ["Tyler Klier <tylerklier@gmail.com>"]
 readme = "README.md"
 
+[tool.poetry.scripts]
+qg = "QueryGuard.__main__:cli"
+
 [tool.poetry.dependencies]
 python = "^3.11"
 sqlparse = "^0.4.4"
 rich = "^13.6.0"
 typer = "^0.9.0"
-dynaconf = "^3.2.4"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"

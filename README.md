@@ -1,6 +1,6 @@
 ## TODO
-- engine tests
 - cli tests
 - output options
 - documentation
+- add rules
 - support for multiple architectures
