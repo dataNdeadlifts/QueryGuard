@@ -1,0 +1,23 @@
+version: '3'
+
+tasks:
+  test:
+    aliases:
+      - t
+    cmds:
+      - poetry run coverage run -m pytest
+      - poetry run coverage html
+
+  coverage:
+    aliases:
+      - c
+      - cov
+    cmds:
+      - poetry run coverage report
+
+  activate:
+    aliases:
+      - shell
+      - poetry-shell
+    cmds:
+      - poetry shell

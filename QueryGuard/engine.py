@@ -145,8 +145,6 @@ class RulesEngine:
             table.add_section()
             if file.status == "Passed ✅":
                 table.add_row(str(file.path), "Passed ✅", "", "")
-            elif file.status == "Not Run":
-                table.add_row(str(file.path), "Not Run", "", "")
             else:
                 table.add_row(str(file.path), "Failed ❌", "", "")
                 for violation in file.violations:
