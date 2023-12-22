@@ -11,10 +11,10 @@ from rich.progress import track
 from rich.syntax import Syntax
 from rich.table import Table
 
-from QueryGuard import rules
-from QueryGuard.config import Config
-from QueryGuard.exceptions import RuleViolation
-from QueryGuard.parser import SQLParser
+from queryguard import rules
+from queryguard.config import Config
+from queryguard.exceptions import RuleViolation
+from queryguard.parser import SQLParser
 
 logger = logging.getLogger(__name__)
 

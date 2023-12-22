@@ -6,13 +6,13 @@ from pathlib import Path
 import typer
 from typing_extensions import Annotated
 
-from QueryGuard.config import Config
-from QueryGuard.engine import RulesEngine
+from queryguard.config import Config
+from queryguard.engine import RulesEngine
 
 cli = typer.Typer()
 
 
-@cli.command()  # type: ignore[misc]
+@cli.command()
 def run(
     path: Annotated[Path, typer.Argument(help="Path to a file or folder containing sql queries")],
     settings: Annotated[str, typer.Option(help="Path to configuration file", show_default=False)] = "",

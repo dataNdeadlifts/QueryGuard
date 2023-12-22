@@ -1,4 +1,4 @@
-from QueryGuard.cli import cli
+from queryguard.cli import cli
 
 if __name__ == "__main__":
     cli()

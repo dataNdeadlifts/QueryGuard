@@ -1,6 +1,6 @@
 import pytest
 
-from QueryGuard.rules import BaseRule
+from queryguard.rules import BaseRule
 
 
 class TestBaseRule:

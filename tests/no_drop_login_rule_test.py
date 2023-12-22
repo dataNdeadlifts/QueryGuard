@@ -1,8 +1,8 @@
 import pytest
 
-from QueryGuard.exceptions import RuleViolation
-from QueryGuard.parser import SQLParser
-from QueryGuard.rules import NoDropLoginRule
+from queryguard.exceptions import RuleViolation
+from queryguard.parser import SQLParser
+from queryguard.rules import NoDropLoginRule
 
 
 class TestNoDropLoginRule:

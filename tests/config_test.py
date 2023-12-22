@@ -3,8 +3,8 @@ from pathlib import Path
 
 import pytest
 
-from QueryGuard import rules
-from QueryGuard.config import BaseSetting, CLIHandler, Config, FileHandler, SelectSetting
+from queryguard import rules
+from queryguard.config import BaseSetting, CLIHandler, Config, FileHandler, SelectSetting
 
 
 class TestConfig:

@@ -6,8 +6,8 @@ from typing import NoReturn
 
 import sqlparse
 
-from QueryGuard.exceptions import RuleViolation
-from QueryGuard.parser import SQLParser
+from queryguard.exceptions import RuleViolation
+from queryguard.parser import SQLParser
 
 logger = logging.getLogger(__name__)
 

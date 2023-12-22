@@ -7,9 +7,9 @@ import pytest
 import sqlparse
 from click import ClickException
 
-from QueryGuard.config import Config
-from QueryGuard.engine import File, RulesEngine
-from QueryGuard.exceptions import RuleViolation
+from queryguard.config import Config
+from queryguard.engine import File, RulesEngine
+from queryguard.exceptions import RuleViolation
 
 
 @pytest.fixture  # type: ignore[misc]

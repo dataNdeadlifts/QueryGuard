@@ -9,7 +9,7 @@ from typing import Any, Iterable, Literal
 
 import tomllib
 
-from QueryGuard import rules
+from queryguard import rules
 
 logger = logging.getLogger(__name__)
 

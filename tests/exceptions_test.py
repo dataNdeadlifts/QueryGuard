@@ -1,4 +1,4 @@
-from QueryGuard.exceptions import RuleViolation
+from queryguard.exceptions import RuleViolation
 
 
 class TestExceptions:
