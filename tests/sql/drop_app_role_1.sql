@@ -1,0 +1,1 @@
+DROP APPLICATION ROLE test_app_role;

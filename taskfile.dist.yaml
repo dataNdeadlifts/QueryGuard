@@ -1,0 +1,59 @@
+version: "3"
+
+tasks:
+  install-dagger-windows:
+    # taken from flaky official installation process using https://dl.dagger.io/dagger/install.ps1
+    cmds:
+      - |
+        pwsh -NoLogo -NoProfile -NonInteractive -c '
+          $name = "dagger"
+          $base = "https://dl.dagger.io"
+          $version = Invoke-RestMethod "http://releases.dagger.io/dagger/latest_version" -Method "GET"
+          $version = $version -replace "[""]"
+          $version = $version -replace "\n"
+          $fileName = "dagger_v" + $version + "_windows_amd64"
+          $url = $base + "/" + $name + "/releases/" + $version + "/" + $fileName + ".zip"
+          Invoke-WebRequest -Uri $url -OutFile $env:temp/$fileName.zip -ErrorAction Stop
+          Expand-Archive -Path $env:temp/$fileName.zip -DestinationPath $env:HOMEPATH/dagger -Force
+
+          $dagger_path = "$env:USERPROFILE\dagger\"
+          $current_path = $env:Path.trimend(";") -split ";"
+
+          if ($null -eq ($current_path | Where-Object { $_ -Match "^$([regex]::Escape($dagger_path))\\?" })) {
+              $user_path = [System.Environment]::GetEnvironmentVariable("PATH", "User").trimend(";") -split ";"
+              [System.Environment]::SetEnvironmentVariable("PATH", ($user_path + $dagger_path -join ";"), "User")
+              $env:Path = $current_path + $dagger_path -join ";"
+          }'
+    platforms: [windows]
+
+  install-dagger-linux:
+    cmds:
+      - cd /usr/local && curl -L https://dl.dagger.io/dagger/install.sh | sh
+    platforms: [linux]
+
+  setup-dev-env:
+    aliases:
+      - setup
+    cmds:
+      - poetry env use python
+      - poetry install --with dev
+      - poetry run pre-commit install
+      - task: install-dagger-{{OS}}
+
+  test:
+    aliases:
+      - t
+    cmds:
+      - poetry run coverage run -m pytest
+      - poetry run coverage html
+
+  activate:
+    aliases:
+      - shell
+      - poetry-shell
+    cmds:
+      - poetry shell
+
+  ci:
+    cmds:
+      - dagger run python ci/main.py

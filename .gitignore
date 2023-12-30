@@ -1,0 +1,10 @@
+**/.*
+**/*scratch*
+!.pre-commit-config.yaml
+!.gitignore
+**/htmlcov
+**/__*__/
+**/*queryguard.toml
+dist
+compose-dev.yaml
+TODO
