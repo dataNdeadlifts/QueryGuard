@@ -72,7 +72,7 @@ class BaseHandler(ABC):
         if setting.type == "bool":
             return bool(value)
 
-        raise ValueError(f"Invalid type {setting.type}")
+        raise ValueError(f"Can't convert type {type(value).__name__} to {setting.type}.")
 
 
 class EnvironmentHandler(BaseHandler):
