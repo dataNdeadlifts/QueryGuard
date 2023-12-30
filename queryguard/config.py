@@ -72,6 +72,9 @@ class BaseHandler(ABC):
         if setting.type == "bool":
             return bool(value)
 
+        if type(value).__name__ == setting.type:
+            return value
+
         raise ValueError(f"Can't convert type {type(value).__name__} to {setting.type}.")
 
 
