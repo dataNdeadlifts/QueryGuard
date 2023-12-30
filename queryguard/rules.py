@@ -142,7 +142,7 @@ class NoAlterLoginRule(BaseRule):
     rule = "NoAlterLogin"
     id = "S003"
 
-    def check(self, statements: sqlparse.sql.Statement) -> None:
+    def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "alter"):
             if SQLParser.acts_on_type(statement, "login"):
@@ -169,7 +169,7 @@ class NoCreateServerRoleRule(BaseRule):
     rule = "NoCreateServerRole"
     id = "S004"
 
-    def check(self, statements: sqlparse.sql.Statement) -> None:
+    def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "create"):
             if SQLParser.acts_on_type(statement, "server") and SQLParser.acts_on_type(statement, "role"):
@@ -186,7 +186,7 @@ class NoDropServerRoleRule(BaseRule):
     rule = "NoDropServerRole"
     id = "S005"
 
-    def check(self, statements: sqlparse.sql.Statement) -> None:
+    def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "drop"):
             if SQLParser.acts_on_type(statement, "server") and SQLParser.acts_on_type(statement, "role"):
@@ -205,7 +205,7 @@ class NoAlterServerRoleRule(BaseRule):
     rule = "NoAlterServerRole"
     id = "S006"
 
-    def check(self, statements: sqlparse.sql.Statement) -> None:
+    def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "alter"):
             if SQLParser.acts_on_type(statement, "server") and SQLParser.acts_on_type(statement, "role"):
@@ -229,7 +229,7 @@ class NoCreateDatabaseRoleRule(BaseRule):
     rule = "NoCreateDatabaseRole"
     id = "S007"
 
-    def check(self, statements: sqlparse.sql.Statement) -> None:
+    def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "create"):
             if (
@@ -254,7 +254,7 @@ class NoDropDatabaseRoleRule(BaseRule):
     rule = "NoDropDatabaseRole"
     id = "S008"
 
-    def check(self, statements: sqlparse.sql.Statement) -> None:
+    def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "drop"):
             if (
@@ -280,7 +280,7 @@ class NoAlterDatabaseRoleRule(BaseRule):
     rule = "NoAlterDatabaseRole"
     id = "S009"
 
-    def check(self, statements: sqlparse.sql.Statement) -> None:
+    def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "alter"):
             if (
@@ -308,7 +308,7 @@ class NoCreateAppRoleRule(BaseRule):
     rule = "NoCreateAppRole"
     id = "S010"
 
-    def check(self, statements: sqlparse.sql.Statement) -> None:
+    def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "create"):
             if SQLParser.acts_on_type(statement, "role") and SQLParser.acts_on_type(statement, "application"):
@@ -329,7 +329,7 @@ class NoDropAppRoleRule(BaseRule):
     rule = "NoDropAppRole"
     id = "S011"
 
-    def check(self, statements: sqlparse.sql.Statement) -> None:
+    def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "drop"):
             if SQLParser.acts_on_type(statement, "role") and SQLParser.acts_on_type(statement, "application"):
@@ -350,7 +350,7 @@ class NoAlterAppRoleRule(BaseRule):
     rule = "NoAlterAppRole"
     id = "S012"
 
-    def check(self, statements: sqlparse.sql.Statement) -> None:
+    def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "alter"):
             if SQLParser.acts_on_type(statement, "role") and SQLParser.acts_on_type(statement, "application"):
@@ -371,7 +371,7 @@ class NoDynamicSQLRule(BaseRule):
     rule = "NoDynamicSQL"
     id = "S013"
 
-    def check(self, statements: sqlparse.sql.Statement) -> None:
+    def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_exec_string(statements):
             self.handle_match(statement)
