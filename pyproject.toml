@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "QueryGuard"
 version = "1.0.0-beta.1"
-description = "A SQL policy guardian."
+description = "A guardian against unruly sql."
 authors = ["Tyler Klier <tylerklier@gmail.com>"]
 readme = "README.md"
 
@@ -10,7 +10,7 @@ qg = "queryguard.__main__:cli"
 queryguard = "queryguard.__main__:cli"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.8"
 sqlparse = "^0.4.4"
 rich = "^13.6.0"
 typer = "^0.9.0"

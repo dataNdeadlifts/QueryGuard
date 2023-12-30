@@ -30,3 +30,6 @@ repos:
       - id: name-tests-test
       - id: no-commit-to-branch
       - id: trailing-whitespace
+
+ci:
+  skip: []
