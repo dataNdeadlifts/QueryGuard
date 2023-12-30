@@ -36,7 +36,7 @@ tasks:
       - setup
     cmds:
       - poetry env use python
-      - poetry install --with dev
+      - poetry install --with dev --sync
       - poetry run pre-commit install
       - task: install-dagger-{{OS}}
 
