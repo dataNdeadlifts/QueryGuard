@@ -2,12 +2,16 @@ from __future__ import annotations
 
 import logging
 import os
+import sys
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable, Literal
 
-import tomllib
+if sys.version_info >= (3, 11):
+    import tomllib
+else:
+    import tomli as tomllib
 
 from queryguard import rules
 
@@ -68,7 +72,10 @@ class BaseHandler(ABC):
         if setting.type == "bool":
             return bool(value)
 
-        raise ValueError(f"Invalid type {setting.type}")
+        if type(value).__name__ == setting.type:
+            return value
+
+        raise ValueError(f"Can't convert type {type(value).__name__} to {setting.type}.")
 
 
 class EnvironmentHandler(BaseHandler):

@@ -2,6 +2,7 @@
 **/*scratch*
 !.pre-commit-config.yaml
 !.gitignore
+!.github
 **/htmlcov
 **/__*__/
 **/*queryguard.toml
