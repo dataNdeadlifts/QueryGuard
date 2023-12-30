@@ -35,44 +35,11 @@ Successfully installed QueryGuard
 
 ### Check all sql files in a folder
 
-<div class="termy">
-
-```console
-$ qg ./sql
-Processing... ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
-┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ File                         ┃ Status    ┃ Violations                ┃ Statements                       ┃
-┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-│ sql\multiple_violations.sql  │ Failed ❌ │                           │                                  │
-│                              │           │ NoCreateLogin (S001)      │ CREATE LOGIN [test_login] WITH … │
-│                              │           │ NoCreateServerRole (S004) │                                  │
-│                              │           │                           │ GO                               │
-│                              │           │                           │ CREATE SERVER ROLE test_role;    │
-├──────────────────────────────┼───────────┼───────────────────────────┼──────────────────────────────────┤
-│ sql\no_violations.sql        │ Passed ✅ │                           │                                  │
-└──────────────────────────────┴───────────┴───────────────────────────┴──────────────────────────────────┘
-
-```
-
-</div>
+![Simple Violation](docs\images\simple_violation.png)
 
 ### Ignore a specific rule
 
-<div class="termy">
-
-```console
-$ qg .\sql\multiple_violations.sql --ignore S001
-Processing... ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
-┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ File                        ┃ Status    ┃ Violations                ┃ Statements                    ┃
-┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-│ sql\multiple_violations.sql │ Failed ❌ │                           │                               │
-│                             │           │ NoCreateServerRole (S004) │                               │
-│                             │           │                           │ GO                            │
-│                             │           │                           │ CREATE SERVER ROLE test_role; │
-└─────────────────────────────┴───────────┴───────────────────────────┴───────────────────────────────┘
-
-```
+![Ignore Violation](docs\images\ignore_violation.png)
 
 
 ## License
