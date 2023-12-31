@@ -42,11 +42,11 @@ Successfully installed QueryGuard
 
 ### Check all sql files in a folder
 
-![Simple Violation](docs\images\simple_violation.png)
+![Simple Violation](docs/images/simple_violation.png)
 
 ### Ignore a specific rule
 
-![Ignore Violation](docs\images\ignore_violation.png)
+![Ignore Violation](docs/images/ignore_violation.png)
 
 
 ## License
