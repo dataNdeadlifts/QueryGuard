@@ -1,5 +1,13 @@
 
 
+<p align="center">
+    <em>A guard against unruly sql.</em>
+</p>
+<p align="center">
+
+[![Test](https://github.com/dataNdeadlifts/QueryGuard/actions/workflows/test.yml/badge.svg)](https://github.com/dataNdeadlifts/QueryGuard/actions/workflows/test.yml)
+[![codecov](https://codecov.io/github/dataNdeadlifts/QueryGuard/graph/badge.svg?token=3TL6N3BMM4)](https://codecov.io/github/dataNdeadlifts/QueryGuard)
+
 ---
 
 **Documentation**:
@@ -15,7 +23,7 @@ It functions very similarly to static analysis tools for other programing langua
 
 ## Requirements
 
-Python 3.8+
+Python 3.9+
 
 
 ## Installation
@@ -35,11 +43,11 @@ Successfully installed QueryGuard
 
 ### Check all sql files in a folder
 
-![Simple Violation](docs\images\simple_violation.png)
+![Simple Violation](docs/images/simple_violation.png)
 
 ### Ignore a specific rule
 
-![Ignore Violation](docs\images\ignore_violation.png)
+![Ignore Violation](docs/images/ignore_violation.png)
 
 
 ## License
