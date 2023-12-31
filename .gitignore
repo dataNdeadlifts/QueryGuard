@@ -6,6 +6,7 @@
 **/htmlcov
 **/__*__/
 **/*queryguard.toml
+coverage.*
 dist
 compose-dev.yaml
 TODO

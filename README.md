@@ -1,5 +1,12 @@
 
 
+<p align="center">
+    <em>A guard against unruly sql.</em>
+</p>
+<p align="center">
+
+[![codecov](https://codecov.io/github/dataNdeadlifts/QueryGuard/graph/badge.svg?token=3TL6N3BMM4)](https://codecov.io/github/dataNdeadlifts/QueryGuard)
+
 ---
 
 **Documentation**:
