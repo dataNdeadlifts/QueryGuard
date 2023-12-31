@@ -23,7 +23,7 @@ It functions very similarly to static analysis tools for other programing langua
 
 ## Requirements
 
-Python 3.8+
+Python 3.9+
 
 
 ## Installation
