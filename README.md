@@ -4,7 +4,8 @@
     <em>A guard against unruly sql.</em>
 </p>
 <p align="center">
-
+    
+[![Test](https://github.com/dataNdeadlifts/QueryGuard/actions/workflows/test.yml/badge.svg)](https://github.com/dataNdeadlifts/QueryGuard/actions/workflows/test.yml)
 [![codecov](https://codecov.io/github/dataNdeadlifts/QueryGuard/graph/badge.svg?token=3TL6N3BMM4)](https://codecov.io/github/dataNdeadlifts/QueryGuard)
 
 ---
