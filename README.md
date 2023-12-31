@@ -1,4 +1,4 @@
-
+![Logo](docs/images/logo.jpg)
 
 <p align="center">
     <em>A guard against unruly sql.</em>
