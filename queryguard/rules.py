@@ -71,10 +71,13 @@ class BaseRule(ABC):
         raise RuleViolation(self.rule, self.id, statement)
 
 
-class NoCreateLoginRule(BaseRule):
+class NoCreateLogin(BaseRule):
     """Checks for any SQL statements that create a login.
 
+    ID: S001
+
     This rule checks for the following statements:
+
     - CREATE LOGIN
     - sp_grantlogin
     - sp_addlogin
@@ -100,10 +103,13 @@ class NoCreateLoginRule(BaseRule):
             self.handle_match(statement)
 
 
-class NoDropLoginRule(BaseRule):
-    """Checks for any SQL statements that drop a login, and raises a RuleViolation exception if found.
+class NoDropLogin(BaseRule):
+    """Checks for any SQL statements that drop a login.
+
+    ID: S002
 
     This rule checks for the following statements:
+
     - DROP LOGIN
     - sp_droplogin
     - sp_dropremotelogin
@@ -129,10 +135,13 @@ class NoDropLoginRule(BaseRule):
             self.handle_match(statement)
 
 
-class NoAlterLoginRule(BaseRule):
-    """Checks for any SQL statements that alter a login, and raises a RuleViolation exception if found.
+class NoAlterLogin(BaseRule):
+    """Checks for any SQL statements that alter a login.
+
+    ID: S003
 
     This rule checks for the following statements:
+
     - ALTER LOGIN
     - sp_denylogin
     - sp_change_users_login
@@ -159,10 +168,13 @@ class NoAlterLoginRule(BaseRule):
             self.handle_match(statement)
 
 
-class NoCreateServerRoleRule(BaseRule):
-    """Checks for any SQL statements that create a server role, and raises a RuleViolation exception if found.
+class NoCreateServerRole(BaseRule):
+    """Checks for any SQL statements that create a server role.
+
+    ID: S004
 
     This rule checks for the following statements:
+
     - CREATE SERVER ROLE
     """
 
@@ -176,10 +188,13 @@ class NoCreateServerRoleRule(BaseRule):
                 self.handle_match(statement)
 
 
-class NoDropServerRoleRule(BaseRule):
-    """Checks for any SQL statements that drop a server role, and raises a RuleViolation exception if found.
+class NoDropServerRole(BaseRule):
+    """Checks for any SQL statements that drop a server role.
+
+    ID: S005
 
     This rule checks for the following statements:
+
     - DROP SERVER ROLE
     """
 
@@ -193,10 +208,13 @@ class NoDropServerRoleRule(BaseRule):
                 self.handle_match(statement)
 
 
-class NoAlterServerRoleRule(BaseRule):
-    """Checks for any SQL statements that alter a server role, and raises a RuleViolation exception if found.
+class NoAlterServerRole(BaseRule):
+    """Checks for any SQL statements that alter a server role.
+
+    ID: S006
 
     This rule checks for the following statements:
+
     - ALTER SERVER ROLE
     - sp_addsrvrolemember
     - sp_dropsrvrolemember
@@ -218,10 +236,13 @@ class NoAlterServerRoleRule(BaseRule):
             self.handle_match(statement)
 
 
-class NoCreateDatabaseRoleRule(BaseRule):
-    """Checks for any SQL statements that create a database role, and raises a RuleViolation exception if found.
+class NoCreateDatabaseRole(BaseRule):
+    """Checks for any SQL statements that create a database role.
+
+    ID: S007
 
     This rule checks for the following statements:
+
     - CREATE ROLE
     - sp_addrole
     """
@@ -243,10 +264,13 @@ class NoCreateDatabaseRoleRule(BaseRule):
             self.handle_match(statement)
 
 
-class NoDropDatabaseRoleRule(BaseRule):
-    """Checks for any SQL statements that drop a database role, and raises a RuleViolation exception if found.
+class NoDropDatabaseRole(BaseRule):
+    """Checks for any SQL statements that drop a database role.
+
+    ID: S008
 
     This rule checks for the following statements:
+
     - DROP ROLE
     - sp_droprole
     """
@@ -268,10 +292,12 @@ class NoDropDatabaseRoleRule(BaseRule):
             self.handle_match(statement)
 
 
-class NoAlterDatabaseRoleRule(BaseRule):
-    """Checks for any SQL statements that alter a database role, and raises a RuleViolation exception if found.
+class NoAlterDatabaseRole(BaseRule):
+    """Checks for any SQL statements that alter a database role.
 
+    ID: S009
     This rule checks for the following statements:
+
     - ALTER ROLE
     - sp_addrolemember
     - sp_droprolemember
@@ -297,10 +323,12 @@ class NoAlterDatabaseRoleRule(BaseRule):
             self.handle_match(statement)
 
 
-class NoCreateAppRoleRule(BaseRule):
-    """Checks for any SQL statements that create an application role, and raises a RuleViolation exception if found.
+class NoCreateAppRole(BaseRule):
+    """Checks for any SQL statements that create an application role.
 
+    ID: S010
     This rule checks for the following statements:
+
     - CREATE APPLICATION ROLE
     - sp_addapprole
     """
@@ -318,10 +346,13 @@ class NoCreateAppRoleRule(BaseRule):
             self.handle_match(statement)
 
 
-class NoDropAppRoleRule(BaseRule):
-    """Checks for any SQL statements that drop an application role, and raises a RuleViolation exception if found.
+class NoDropAppRole(BaseRule):
+    """Checks for any SQL statements that drop an application role.
+
+    ID: S011
 
     This rule checks for the following statements:
+
     - DROP APPLICATION ROLE
     - sp_dropapprole
     """
@@ -339,10 +370,12 @@ class NoDropAppRoleRule(BaseRule):
             self.handle_match(statement)
 
 
-class NoAlterAppRoleRule(BaseRule):
-    """Checks for any SQL statements that alter an application role, and raises a RuleViolation exception if found.
+class NoAlterAppRole(BaseRule):
+    """Checks for any SQL statements that alter an application role.
 
+    ID: S012
     This rule checks for the following statements:
+
     - ALTER APPLICATION ROLE
     - sp_approlepassword
     """
@@ -360,10 +393,12 @@ class NoAlterAppRoleRule(BaseRule):
             self.handle_match(statement)
 
 
-class NoDynamicSQLRule(BaseRule):
-    """Checks for any SQL statements that use dynamic sql, and raises a RuleViolation exception if found.
+class NoDynamicSQL(BaseRule):
+    """Checks for any SQL statements that use dynamic sql.
 
+    ID: S013
     This rule checks for the following statements:
+
     - EXEC (string)
     - sp_executesql
     """

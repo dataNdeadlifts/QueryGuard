@@ -1,4 +1,4 @@
-# Overview
+# QueryGuard - *A guard against unruly sql*
 
 ## Description
 
