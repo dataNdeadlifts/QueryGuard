@@ -4,6 +4,7 @@
 !.gitignore
 !.github
 !.releaserc.yaml
+!.readthedocs.yaml
 **/htmlcov
 **/__*__/
 **/*queryguard.toml
