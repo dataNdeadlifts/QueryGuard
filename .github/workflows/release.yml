@@ -29,10 +29,7 @@ jobs:
           node-version: "lts/*"
 
       - name: Install dependencies
-        run: npm clean-install
-
-      - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
-        run: npm audit signatures
+        run: npm install -g semantic-release semantic-release/changelog conventional-changelog-conventionalcommits semantic-release-pypi
 
       - name: Release
         env:
