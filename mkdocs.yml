@@ -1,0 +1,5 @@
+site_name: QueryGuard - A guard against unruly sql
+site_url: https://queryguard.readthedocs.io/
+nav:
+  - Home: index.md
+theme: readthedocs
