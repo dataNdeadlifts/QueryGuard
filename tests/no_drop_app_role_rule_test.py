@@ -4,34 +4,34 @@ import pytest
 
 from queryguard.exceptions import RuleViolation
 from queryguard.parser import SQLParser
-from queryguard.rules import NoDropAppRoleRule
+from queryguard.rules import NoDropAppRole
 
 
-class TestNoDropAppRoleRule:
+class TestNoDropAppRole:
     def test_check_method_1(self) -> None:
-        rule = NoDropAppRoleRule()
+        rule = NoDropAppRole()
         statements = SQLParser.get_statements("DROP APPLICATION ROLE test_app_role;")
         with pytest.raises(RuleViolation):
             rule.check(statements)
 
     def test_check_method_2(self) -> None:
-        rule = NoDropAppRoleRule()
+        rule = NoDropAppRole()
         statements = SQLParser.get_statements("sp_dropapprole 'test_app_role';")
         with pytest.raises(RuleViolation):
             rule.check(statements)
 
     def test_database_role(self) -> None:
-        rule = NoDropAppRoleRule()
+        rule = NoDropAppRole()
         statements = SQLParser.get_statements("DROP ROLE test_role;")
         rule.check(statements)
 
     def test_server_role(self) -> None:
-        rule = NoDropAppRoleRule()
+        rule = NoDropAppRole()
         statements = SQLParser.get_statements("DROP SERVER ROLE test_role;")
         rule.check(statements)
 
     def test_handle_match_method(self) -> None:
-        rule = NoDropAppRoleRule()
+        rule = NoDropAppRole()
         statement = SQLParser.get_statements("DROP APPLICATION ROLE test_app_role;")[0]
         with pytest.raises(RuleViolation):
             rule.handle_match(statement)
