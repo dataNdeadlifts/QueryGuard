@@ -34,6 +34,10 @@ optional = true
 coverage = "^7.3.2"
 pytest = "^7.4.3"
 
+
+[tool.poetry.group.docs.dependencies]
+mkdocs = "^1.5.3"
+
 [tool.ruff]
 select = [
     "ANN", # flake8-annotations
