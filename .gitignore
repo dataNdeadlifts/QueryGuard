@@ -3,6 +3,7 @@
 !.pre-commit-config.yaml
 !.gitignore
 !.github
+!.releaserc.yaml
 **/htmlcov
 **/__*__/
 **/*queryguard.toml
