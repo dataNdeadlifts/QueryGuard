@@ -48,7 +48,7 @@ A list of the available options.
 Specify the configuration file to use. Particularly useful when enforcing
 rules centrally in a CI process without relying on the projects configuration.
 
-Example: Specify a configuration file during execution.
+**Example:** Specify a configuration file during execution.
 `qg . --settings /etc/queryguard_configuration.toml`
 
  ---

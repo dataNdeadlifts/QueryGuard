@@ -1,5 +1,7 @@
 # Rules
 
+A list of the available rules.
+
 ---
 
 ::: queryguard.rules

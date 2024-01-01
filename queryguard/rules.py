@@ -296,6 +296,7 @@ class NoAlterDatabaseRole(BaseRule):
     """Checks for any SQL statements that alter a database role.
 
     ID: S009
+
     This rule checks for the following statements:
 
     - ALTER ROLE
@@ -327,6 +328,7 @@ class NoCreateAppRole(BaseRule):
     """Checks for any SQL statements that create an application role.
 
     ID: S010
+
     This rule checks for the following statements:
 
     - CREATE APPLICATION ROLE
@@ -374,6 +376,7 @@ class NoAlterAppRole(BaseRule):
     """Checks for any SQL statements that alter an application role.
 
     ID: S012
+
     This rule checks for the following statements:
 
     - ALTER APPLICATION ROLE
@@ -397,6 +400,7 @@ class NoDynamicSQL(BaseRule):
     """Checks for any SQL statements that use dynamic sql.
 
     ID: S013
+
     This rule checks for the following statements:
 
     - EXEC (string)
