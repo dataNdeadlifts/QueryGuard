@@ -1,4 +1,8 @@
-branches: main
+branches:
+  - main
+  - name: beta
+    prerelease: true
+
 plugins:
     - - "@semantic-release/commit-analyzer"
       - preset: "conventionalcommits"
@@ -38,5 +42,4 @@ plugins:
 
     - "@semantic-release/changelog"
 
-    # Disabled until pypi registration re-opens
-    # - "@semantic-release-pypi"
+    - "@semantic-release-pypi"
