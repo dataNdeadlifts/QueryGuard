@@ -26,8 +26,6 @@ pre-commit = "^3.5.0"
 mypy = "^1.8.0"
 lxml = "^4.9.4"
 ruff = "^0.1.9"
-mkdocs = "^1.5.3"
-mkdocstrings = {extras = ["python"], version = "^0.24.0"}
 
 [tool.poetry.group.test]
 optional = true
@@ -35,13 +33,6 @@ optional = true
 [tool.poetry.group.test.dependencies]
 coverage = "^7.3.2"
 pytest = "^7.4.3"
-
-[tool.poetry.group.docs]
-optional = true
-
-[tool.poetry.group.docs.dependencies]
-mkdocs = "^1.5.3"
-mkdocstrings = {extras = ["python"], version = "^0.24.0"}
 
 [tool.ruff]
 select = [
