@@ -62,4 +62,6 @@ repos:
       -   id: poetry-lock
       -   id: poetry-install
 ci:
-  skip: []
+  skip:
+    - poetry-lock
+    - poetry-install
