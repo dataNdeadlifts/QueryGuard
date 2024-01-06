@@ -8,6 +8,7 @@
 **/htmlcov
 **/__*__/
 **/*queryguard.toml
+node_modules
 coverage.*
 dist
 compose-dev.yaml

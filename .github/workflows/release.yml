@@ -29,7 +29,7 @@ jobs:
           node-version: "lts/*"
 
       - name: Install dependencies
-        run: npm install -g semantic-release semantic-release/changelog conventional-changelog-conventionalcommits semantic-release-pypi
+        run: npm install --no-save --prefix . semantic-release semantic-release/changelog semantic-release/git conventional-changelog-conventionalcommits semantic-release-pypi
 
       - name: Release
         env:
