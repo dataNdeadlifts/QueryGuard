@@ -7,31 +7,37 @@ plugins:
     - - "@semantic-release/commit-analyzer"
       - preset: "conventionalcommits"
         releaseRules:
-          - type: "docs"
-            release: "patch"
-          - type: "refactor"
-            release: "patch"
-          - type: "style"
-            release: "patch"
-          - type: "ci"
-            release: "patch"
-          - type: "test"
-            release: "patch"
-          - type: "build"
-            release: "patch"
-          - type: "perf"
-            release: "patch"
-          - type: "chore"
-            release: "patch"
           - type: "fix"
             release: "patch"
           - type: "feat"
+            release: "minor"
+          - type: "perf"
             release: "minor"
           - type: "BREAKING CHANGE"
             release: "major"
 
     - - "@semantic-release/release-notes-generator"
       - preset: "conventionalcommits"
+        parserOpts:
+          types:
+            - type: feat
+              section: "Features"
+            - type: fix
+              section: "Bug Fixes"
+            - type: chore
+              hidden: true
+            - type: docs
+              hidden: true
+            - type: style
+              hidden: true
+            - type: refactor
+              hidden: true
+            - type: perf
+              hidden: true
+            - type: test
+              hidden: true
+            - type: ci
+              hidden: true
 
     - - "@semantic-release/github":
       - assets:

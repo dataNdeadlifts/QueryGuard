@@ -61,7 +61,14 @@ repos:
       -   id: poetry-check
       -   id: poetry-lock
       -   id: poetry-install
+
 ci:
+  autofix_commit_msg: |
+        ci: auto fixes from pre-commit.com hooks
+
+        for more information, see https://pre-commit.ci
+  autoupdate_commit_msg: "ci:  pre-commit autoupdate"
+  autoupdate_schedule: quarterly
   skip:
     - poetry-lock
     - poetry-install
