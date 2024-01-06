@@ -12,7 +12,7 @@ plugins:
           - type: "feat"
             release: "minor"
           - type: "perf"
-            release: "minor"            
+            release: "minor"
           - type: "BREAKING CHANGE"
             release: "major"
 
@@ -27,7 +27,7 @@ plugins:
             - type: chore
               hidden: true
             - type: docs
-              hidden: true         
+              hidden: true
             - type: style
               hidden: true
             - type: refactor
@@ -38,7 +38,7 @@ plugins:
               hidden: true
             - type: ci
               hidden: true
-                                                        
+
     - - "@semantic-release/github":
       - assets:
           - path: "dist/*.whl"
