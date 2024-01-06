@@ -42,4 +42,8 @@ plugins:
 
     - "@semantic-release/changelog"
 
-    - "@semantic-release-pypi"
+    - "semantic-release-pypi"
+
+    - - "@semantic-release/git":
+      - assets:
+          - "pyproject.toml"

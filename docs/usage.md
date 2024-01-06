@@ -22,7 +22,7 @@ File Names:
 
 - queryguard.toml
 - .queryguard.toml
-- .pyproject.toml
+- pyproject.toml
 
 File Locations:
 
