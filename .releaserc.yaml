@@ -52,4 +52,5 @@ plugins:
 
     - - "@semantic-release/git":
       - assets:
-          - "pyproject.toml"
+          - pyproject.toml
+          - CHANGELOG.md
