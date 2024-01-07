@@ -53,11 +53,11 @@ jobs:
 
       - name: Publish package to PyPI
         uses: pypa/gh-action-pypi-publish@v1.8.11
-        if: ${{ steps.release.outputs.released }} == 'true'
+        if: ${{ steps.release.outputs.released }} == 'true' && startsWith(github.ref, 'refs/tags')
 
       - name: Publish package to GitHub Release
         uses: python-semantic-release/upload-to-gh-release@main
-        if: ${{ steps.release.outputs.released }} == 'true'
+        if: ${{ steps.release.outputs.released }} == 'true' && startsWith(github.ref, 'refs/tags')
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ steps.release.outputs.tag }}
