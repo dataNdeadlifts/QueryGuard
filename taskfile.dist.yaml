@@ -31,12 +31,16 @@ tasks:
       - cd /usr/local && curl -L https://dl.dagger.io/dagger/install.sh | sh
     platforms: [linux]
 
+  install-semantic-release:
+    cmds:
+      - npm install -g semantic-release semantic-release/changelog conventional-changelog-conventionalcommits semantic-release-pypi
+
   setup-dev-env:
     aliases:
       - setup
     cmds:
       - poetry env use python
-      - poetry install --with dev --sync
+      - poetry install --with dev --with docs --sync
       - poetry run pre-commit install
       - task: install-dagger-{{OS}}
 
@@ -57,3 +61,11 @@ tasks:
   ci:
     cmds:
       - dagger run python ci/main.py
+
+  test-release:
+    cmds:
+      - semantic-release --dry-run
+
+  docs:
+    cmds:
+      - mkdocs serve

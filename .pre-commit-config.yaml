@@ -4,13 +4,15 @@ default_install_hook_types:
   - pre-commit
   - commit-msg
   - pre-push
+  - post-checkout
+  - post-merge
 
 default_stages:
   - pre-commit
 
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.1.9
+    rev: v0.1.11
     hooks:
       - id: ruff
         args: [--fix]
@@ -22,6 +24,12 @@ repos:
     -   id: mypy
         args: [--strict, --ignore-missing-imports]
         additional_dependencies: [typer]
+
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.11.0
+    hooks:
+    - id: markdownlint-cli2
+      exclude: CHANGELOG.md
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
@@ -48,5 +56,20 @@ repos:
       - id: commitizen-branch
         stages: [pre-push]
 
+  -   repo: https://github.com/python-poetry/poetry
+      rev: '1.7.0'
+      hooks:
+      -   id: poetry-check
+      -   id: poetry-lock
+      -   id: poetry-install
+
 ci:
-  skip: []
+  autofix_commit_msg: |
+        ci: auto fixes from pre-commit.com hooks
+
+        for more information, see https://pre-commit.ci
+  autoupdate_commit_msg: "ci:  pre-commit autoupdate"
+  autoupdate_schedule: quarterly
+  skip:
+    - poetry-lock
+    - poetry-install
