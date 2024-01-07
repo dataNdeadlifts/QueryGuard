@@ -49,7 +49,7 @@ jobs:
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
       - name: Build Release
-        run: build --no-interaction
+        run: poetry build --no-interaction
 
       - name: Publish package to PyPI
         uses: pypa/gh-action-pypi-publish@v1.8.11
