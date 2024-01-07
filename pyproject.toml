@@ -87,8 +87,8 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.semantic_release]
 version_variables = [
-    "queryguard\\__main__.py:__version__",
-    "queryguard\\__init__.py:__version__",
+    "queryguard/__main__.py:__version__",
+    "queryguard/__init__.py:__version__",
 ]
 version_toml = ["pyproject.toml:tool.poetry.version"]
 assets = []
