@@ -2,6 +2,13 @@
 
 
 
+## v0.1.0-beta.3 (2024-01-07)
+
+### Fix
+
+* fix: force build for testing deployment process ([`5d4cec3`](https://github.com/dataNdeadlifts/QueryGuard/commit/5d4cec3979bc4ccc0b113493cf537fc7fce6ff2f))
+
+
 ## v0.1.0-beta.2 (2024-01-07)
 
 ### Fix
