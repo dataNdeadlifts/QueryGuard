@@ -2,6 +2,13 @@
 
 
 
+## v0.1.0-beta.2 (2024-01-07)
+
+### Fix
+
+* fix: test release workflow ([`09bc652`](https://github.com/dataNdeadlifts/QueryGuard/commit/09bc652f3434bbd3e81c8da7f9ffc6a66aaf0cc0))
+
+
 ## v0.1.0-beta.1 (2024-01-07)
 
 ### Feature
