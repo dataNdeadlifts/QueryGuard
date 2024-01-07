@@ -5,7 +5,7 @@ branches:
 
 plugins:
     - - "@semantic-release/commit-analyzer"
-      - preset: "conventionalcommits"
+      - preset: conventionalcommits
         releaseRules:
           - type: "fix"
             release: "patch"
@@ -17,7 +17,7 @@ plugins:
             release: "major"
 
     - - "@semantic-release/release-notes-generator"
-      - preset: "conventionalcommits"
+      - preset: conventionalcommits
         parserOpts:
           types:
             - type: feat
@@ -54,3 +54,5 @@ plugins:
       - assets:
           - pyproject.toml
           - CHANGELOG.md
+
+debug: true

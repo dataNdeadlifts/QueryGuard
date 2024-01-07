@@ -1,40 +1,60 @@
-name: Release
+name: Semantic Release
+
 on:
   push:
     branches:
       - main
       - beta
 
-permissions:
-  contents: read
-
 jobs:
   release:
-    name: Release
-    environment: release
     runs-on: ubuntu-latest
+    concurrency: release
     permissions:
-      contents: write
-      issues: write
-      pull-requests: write
       id-token: write
+      contents: write
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Python Semantic Release
+        id: release
+        uses: python-semantic-release/python-semantic-release@v8.7.2
         with:
-          node-version: "lts/*"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install dependencies
-        run: npm install --no-save --prefix . semantic-release semantic-release/changelog semantic-release/git conventional-changelog-conventionalcommits semantic-release-pypi
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        id: setup-python
+        with:
+          python-version: "3.12"
 
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
-        run: npx semantic-release
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+
+      - name: Load Cached Virtual Environment
+        id: cached-poetry-dependencies
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+
+      - name: Build Release
+        run: build --no-interaction
+
+      - name: Publish package to PyPI
+        uses: pypa/gh-action-pypi-publish@v1.8.11
+        if: ${{ steps.release.outputs.released }} == 'true'
+
+      - name: Publish package to GitHub Release
+        uses: python-semantic-release/upload-to-gh-release@main
+        if: ${{ steps.release.outputs.released }} == 'true'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.release.outputs.tag }}
