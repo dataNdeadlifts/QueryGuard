@@ -11,3 +11,5 @@ coverage.*
 dist
 compose-dev.yaml
 TODO
+/ci
+/node_modules
