@@ -2,13 +2,17 @@ name: Test
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
+      - beta
   pull_request:
-    branches: [ "main" ]
+    types:
+      - opened
+      - synchronize
 
 jobs:
-  build:
-
+  test:
+    name: Test
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

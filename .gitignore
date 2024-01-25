@@ -4,9 +4,11 @@
 !.gitignore
 !.github
 !.releaserc.yaml
+!.readthedocs.yaml
 **/htmlcov
 **/__*__/
 **/*queryguard.toml
+node_modules
 coverage.*
 dist
 compose-dev.yaml
