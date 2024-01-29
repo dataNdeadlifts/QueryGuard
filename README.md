@@ -1,8 +1,8 @@
 # QueryGuard - *A guard against unruly sql*
 
-![Logo](https://raw.githubusercontent.com/dataNdeadlifts/QueryGuard/beta/docs/images/logo.jpg)
+![Logo](https://raw.githubusercontent.com/dataNdeadlifts/QueryGuard/main/docs/images/logo.jpg)
 
-[![Test](https://github.com/dataNdeadlifts/QueryGuard/actions/workflows/test.yml/badge.svg)](https://github.com/dataNdeadlifts/QueryGuard/actions/workflows/test.yml)
+[![Test](https://github.com/dataNdeadlifts/QueryGuard/actions/workflows/test.yaml/badge.svg)](https://github.com/dataNdeadlifts/QueryGuard/actions/workflows/test.yaml)
 [![codecov](https://codecov.io/github/dataNdeadlifts/QueryGuard/graph/badge.svg?token=3TL6N3BMM4)](https://codecov.io/github/dataNdeadlifts/QueryGuard)
 ![PyPI - Version](https://img.shields.io/pypi/v/QueryGuard)
 
@@ -34,11 +34,11 @@ pip install QueryGuard
 
 ### Check all sql files in a folder
 
-![Simple Violation](https://raw.githubusercontent.com/dataNdeadlifts/QueryGuard/beta/docs/images/simple_violation.png)
+![Simple Violation](https://raw.githubusercontent.com/dataNdeadlifts/QueryGuard/main/docs/images/simple_violation.png)
 
 ### Ignore a specific rule
 
-![Ignore Violation](https://raw.githubusercontent.com/dataNdeadlifts/QueryGuard/beta/docs/images/ignore_violation.png)
+![Ignore Violation](https://raw.githubusercontent.com/dataNdeadlifts/QueryGuard/main/docs/images/ignore_violation.png)
 
 ## License
 

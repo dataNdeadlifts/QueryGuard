@@ -1,15 +1,18 @@
 from __future__ import annotations
 
 import os
+import shutil
 from pathlib import Path
+from typing import cast
 
 import pytest
 import sqlparse
 from click import ClickException
 
-from queryguard.config import Config
-from queryguard.engine import File, RulesEngine
+from queryguard.config import RequestParams
+from queryguard.engine import RulesEngine
 from queryguard.exceptions import RuleViolation
+from queryguard.files import File
 
 
 @pytest.fixture  # type: ignore[misc]
@@ -44,16 +47,6 @@ class TestEngine:
         os.unsetenv("QUERYGUARD_IGNORE")
         os.unsetenv("QUERYGUARD_DEBUG")
 
-        # set cli arguments
-        cli_arguments = {
-            "path": "",
-            "settings": "",
-            "select": "",
-            "ignore": "",
-            "debug": False,
-        }
-        config = Config(cli_arguments)
-
         test_dir = tmp_path / "test_dir"
         test_dir.mkdir()
         file1 = test_dir / "file1.sql"
@@ -63,7 +56,18 @@ class TestEngine:
         file3 = test_dir / "file3.txt"
         file3.write_text("This is not an SQL file.")
 
-        engine = RulesEngine(config)
+        request_params = cast(
+            RequestParams,
+            {
+                "path": test_dir,
+                "settings": "",
+                "select": "",
+                "ignore": "",
+                "debug": False,
+            },
+        )
+
+        engine = RulesEngine(request_params)
         files = engine.get_files(test_dir)
 
         assert len(files) == 2
@@ -77,16 +81,6 @@ class TestEngine:
         os.unsetenv("QUERYGUARD_IGNORE")
         os.unsetenv("QUERYGUARD_DEBUG")
 
-        # set cli arguments
-        cli_arguments = {
-            "path": "",
-            "settings": "",
-            "select": "",
-            "ignore": "",
-            "debug": False,
-        }
-        config = Config(cli_arguments)
-
         test_dir = tmp_path / "test_dir1"
         test_dir.mkdir()
         file1 = test_dir / "file1.sql"
@@ -94,15 +88,26 @@ class TestEngine:
         file2 = test_dir / "file2.sql"
         file2.write_text("SELECT * FROM products;")
 
-        engine = RulesEngine(config)
-        engine.run(test_dir)
+        request_params = cast(
+            RequestParams,
+            {
+                "path": test_dir,
+                "settings": "",
+                "select": "",
+                "ignore": "",
+                "debug": False,
+            },
+        )
+
+        engine = RulesEngine(request_params)
 
         assert len(engine.get_files(file1)) == 1
         assert len(engine.get_files(test_dir)) == 2
         assert all(file.status == "Not Run" for file in engine.get_files(test_dir))
 
+        shutil.rmtree(test_dir)
         with pytest.raises(ClickException):
-            engine.run(Path("some_nonsense_that_does_not_exist"))
+            engine.run()
 
     def test_rules_engine_run_rule_violation(self, tmp_path: Path) -> None:
         # unset environment variables
@@ -114,24 +119,24 @@ class TestEngine:
         config_file = tmp_path / "queryguard.toml"
         config_file.unlink(missing_ok=True)
 
-        # set cli arguments
-        cli_arguments = {
-            "path": None,
-            "settings": "",
-            "select": "S",
-            "ignore": "",
-            "debug": False,
-        }
-        config = Config(cli_arguments)
-
         test_dir = tmp_path / "test_dir2"
         test_dir.mkdir()
         file1 = test_dir / "file1.sql"
         file1.write_text("CREATE LOGIN test WITH PASSWORD = 'test';")
 
-        engine = RulesEngine(config)
+        request_params = cast(
+            RequestParams,
+            {
+                "path": file1,
+                "settings": "",
+                "select": "S",
+                "ignore": "",
+                "debug": False,
+            },
+        )
+        engine = RulesEngine(request_params)
 
         with pytest.raises(SystemExit) as e:
-            engine.run(file1)
+            engine.run()
 
         assert e.value.code == 1
