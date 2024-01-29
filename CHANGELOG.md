@@ -2,6 +2,23 @@
 
 
 
+## v0.2.0 (2024-01-29)
+
+### Feature
+
+* feat: add option to output in a json format (#16)
+
+* chore: update dependencies
+
+* chore: change pre-production branch to &#39;release/*&#39;
+
+* docs: correct image paths to point to main branch
+
+* feat: add option to output in a json format
+
+* docs: update readme to correct image paths ([`148e9bc`](https://github.com/dataNdeadlifts/QueryGuard/commit/148e9bc37b235fbd97cae220f3609b092b47ed5a))
+
+
 ## v0.1.0 (2024-01-24)
 
 ### Feature

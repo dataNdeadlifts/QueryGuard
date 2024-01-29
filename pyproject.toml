@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "QueryGuard"
-version = "0.1.0"
+version = "0.2.0"
 description = "A guard against unruly sql."
 authors = ["Tyler Klier <tylerklier@gmail.com>"]
 readme = "README.md"
