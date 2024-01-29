@@ -34,11 +34,11 @@ pip install QueryGuard
 
 ### Check all sql files in a folder
 
-![Simple Violation](https://raw.githubusercontent.com/dataNdeadlifts/QueryGuard/beta/docs/images/simple_violation.png)
+![Simple Violation](https://raw.githubusercontent.com/dataNdeadlifts/QueryGuard/main/docs/images/simple_violation.png)
 
 ### Ignore a specific rule
 
-![Ignore Violation](https://raw.githubusercontent.com/dataNdeadlifts/QueryGuard/beta/docs/images/ignore_violation.png)
+![Ignore Violation](https://raw.githubusercontent.com/dataNdeadlifts/QueryGuard/main/docs/images/ignore_violation.png)
 
 ## License
 
