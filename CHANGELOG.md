@@ -2,6 +2,16 @@
 
 
 
+## v0.3.0-beta.1 (2024-02-06)
+
+### Feature
+
+* feat: add NoAlterDatabaseAll and NoAlterServerConfiguration rules ([`e2b44bf`](https://github.com/dataNdeadlifts/QueryGuard/commit/e2b44bfaf93a62b1d9622527d606bb0f5432ad06))
+
+* feat: add rules for no create/alter/delete users, no create/delete databases, and no alter database files
+fix: issue with false positives being returned under certain conditions ([`c8eb3bb`](https://github.com/dataNdeadlifts/QueryGuard/commit/c8eb3bb59efb516bdf23ec5763cd9b6d2605a334))
+
+
 ## v0.2.0 (2024-01-29)
 
 ### Feature
