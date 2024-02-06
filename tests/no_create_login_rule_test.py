@@ -32,6 +32,11 @@ class TestNoCreateLogin:
         with pytest.raises(RuleViolation):
             rule.check(statements)
 
+    def test_check_method_5(self) -> None:
+        rule = NoCreateLogin()
+        statements = SQLParser.get_statements("CREATE USER [test_user] FOR LOGIN [test_login];")
+        rule.check(statements)
+
     def test_handle_match_method(self) -> None:
         rule = NoCreateLogin()
         statement = SQLParser.get_statements("CREATE LOGIN test WITH PASSWORD = 'test';")[0]

@@ -41,6 +41,18 @@ class TestNoAlterLogin:
         with pytest.raises(RuleViolation):
             rule.check(statements)
 
+    def test_check_method_6(self) -> None:
+        rule = NoAlterLogin()
+        statements = SQLParser.get_statements("EXEC sp_defaultdb 'test_login', 'test_database';")
+        with pytest.raises(RuleViolation):
+            rule.check(statements)
+
+    def test_check_method_7(self) -> None:
+        rule = NoAlterLogin()
+        statements = SQLParser.get_statements("EXEC sp_defaultlanguage 'test_login';")
+        with pytest.raises(RuleViolation):
+            rule.check(statements)
+
     def test_handle_match_method(self) -> None:
         rule = NoAlterLogin()
         statement = SQLParser.get_statements("ALTER LOGIN [test_login] ENABLE;")[0]

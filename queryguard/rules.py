@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import re
 from abc import ABC, abstractmethod
 from typing import NoReturn
 
@@ -90,7 +91,8 @@ class NoCreateLogin(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "create"):
-            if SQLParser.acts_on_type(statement, "login"):
+            # using regex here to avoid false positive results for items like create user for login
+            if re.match(r"^\s*create\s+login", str(statement).casefold()):
                 self.handle_match(statement)
 
         for statement in SQLParser.get_procedure_calls(statements, "sp_grantlogin"):
@@ -122,7 +124,7 @@ class NoDropLogin(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "drop"):
-            if SQLParser.acts_on_type(statement, "login"):
+            if re.match(r"^\s*drop\s+login", str(statement).casefold()):
                 self.handle_match(statement)
 
         for statement in SQLParser.get_procedure_calls(statements, "sp_droplogin"):
@@ -146,6 +148,8 @@ class NoAlterLogin(BaseRule):
     - sp_denylogin
     - sp_change_users_login
     - sp_password
+    - sp_defaultdb
+    - sp_defaultlanguage
     """
 
     rule = "NoAlterLogin"
@@ -154,7 +158,7 @@ class NoAlterLogin(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "alter"):
-            if SQLParser.acts_on_type(statement, "login"):
+            if re.match(r"^\s*alter\s+login", str(statement).casefold()):
                 self.handle_match(statement)
 
         for statement in SQLParser.get_procedure_calls(statements, "sp_denylogin"):
@@ -165,6 +169,12 @@ class NoAlterLogin(BaseRule):
             self.handle_match(statement)
 
         for statement in SQLParser.get_procedure_calls(statements, "sp_password"):
+            self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_calls(statements, "sp_defaultdb"):
+            self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_calls(statements, "sp_defaultlanguage"):
             self.handle_match(statement)
 
 
@@ -184,7 +194,7 @@ class NoCreateServerRole(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "create"):
-            if SQLParser.acts_on_type(statement, "server") and SQLParser.acts_on_type(statement, "role"):
+            if re.match(r"^\s*create\s+server\s+role", str(statement).casefold()):
                 self.handle_match(statement)
 
 
@@ -204,7 +214,7 @@ class NoDropServerRole(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "drop"):
-            if SQLParser.acts_on_type(statement, "server") and SQLParser.acts_on_type(statement, "role"):
+            if re.match(r"^\s*drop\s+server\s+role", str(statement).casefold()):
                 self.handle_match(statement)
 
 
@@ -226,7 +236,7 @@ class NoAlterServerRole(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "alter"):
-            if SQLParser.acts_on_type(statement, "server") and SQLParser.acts_on_type(statement, "role"):
+            if re.match(r"^\s*alter\s+server\s+role", str(statement).casefold()):
                 self.handle_match(statement)
 
         for statement in SQLParser.get_procedure_calls(statements, "sp_addsrvrolemember"):
@@ -253,11 +263,7 @@ class NoCreateDatabaseRole(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "create"):
-            if (
-                SQLParser.acts_on_type(statement, "role")
-                and not SQLParser.acts_on_type(statement, "server")
-                and not SQLParser.acts_on_type(statement, "application")
-            ):
+            if re.match(r"^\s*create\s+role", str(statement).casefold()):
                 self.handle_match(statement)
 
         for statement in SQLParser.get_procedure_calls(statements, "sp_addrole"):
@@ -281,11 +287,7 @@ class NoDropDatabaseRole(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "drop"):
-            if (
-                SQLParser.acts_on_type(statement, "role")
-                and not SQLParser.acts_on_type(statement, "server")
-                and not SQLParser.acts_on_type(statement, "application")
-            ):
+            if re.match(r"^\s*drop\s+role", str(statement).casefold()):
                 self.handle_match(statement)
 
         for statement in SQLParser.get_procedure_calls(statements, "sp_droprole"):
@@ -310,11 +312,7 @@ class NoAlterDatabaseRole(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "alter"):
-            if (
-                SQLParser.acts_on_type(statement, "role")
-                and not SQLParser.acts_on_type(statement, "server")
-                and not SQLParser.acts_on_type(statement, "application")
-            ):
+            if re.match(r"^\s*alter\s+role", str(statement).casefold()):
                 self.handle_match(statement)
 
         for statement in SQLParser.get_procedure_calls(statements, "sp_addrolemember"):
@@ -341,7 +339,7 @@ class NoCreateAppRole(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "create"):
-            if SQLParser.acts_on_type(statement, "role") and SQLParser.acts_on_type(statement, "application"):
+            if re.match(r"^\s*create\s+application\s+role", str(statement).casefold()):
                 self.handle_match(statement)
 
         for statement in SQLParser.get_procedure_calls(statements, "sp_addapprole"):
@@ -365,7 +363,7 @@ class NoDropAppRole(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "drop"):
-            if SQLParser.acts_on_type(statement, "role") and SQLParser.acts_on_type(statement, "application"):
+            if re.match(r"^\s*drop\s+application\s+role", str(statement).casefold()):
                 self.handle_match(statement)
 
         for statement in SQLParser.get_procedure_calls(statements, "sp_dropapprole"):
@@ -389,7 +387,7 @@ class NoAlterAppRole(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "alter"):
-            if SQLParser.acts_on_type(statement, "role") and SQLParser.acts_on_type(statement, "application"):
+            if re.match(r"^\s*alter\s+application\s+role", str(statement).casefold()):
                 self.handle_match(statement)
 
         for statement in SQLParser.get_procedure_calls(statements, "sp_approlepassword"):
@@ -417,3 +415,201 @@ class NoDynamicSQL(BaseRule):
 
         for statement in SQLParser.get_procedure_calls(statements, "sp_executesql"):
             self.handle_match(statement)
+
+
+class NoCreateUser(BaseRule):
+    """Checks for any SQL statements that create a user.
+
+    ID: S014
+
+    This rule checks for the following statements:
+
+    - CREATE USER
+    - sp_adduser
+    - sp_grantdbaccess
+    """
+
+    rule = "NoCreateUser"
+    id = "S014"
+
+    def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
+        super().check(statements)
+        for statement in SQLParser.get_ddl_statements(statements, "create"):
+            if re.match(r"^\s*create\s+user", str(statement).casefold()):
+                self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_calls(statements, "sp_adduser"):
+            self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_calls(statements, "sp_grantdbaccess"):
+            self.handle_match(statement)
+
+
+class NoDropUser(BaseRule):
+    """Checks for any SQL statements that drop a user.
+
+    ID: S015
+
+    This rule checks for the following statements:
+
+    - DROP USER
+    - sp_dropuser
+    - sp_revokedbaccess
+    """
+
+    rule = "NoDropLogin"
+    id = "S015"
+
+    def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
+        super().check(statements)
+        for statement in SQLParser.get_ddl_statements(statements, "drop"):
+            if re.match(r"^\s*drop\s+user", str(statement).casefold()):
+                self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_calls(statements, "sp_dropuser"):
+            self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_calls(statements, "sp_revokedbaccess"):
+            self.handle_match(statement)
+
+
+class NoAlterUser(BaseRule):
+    """Checks for any SQL statements that alter a user.
+
+    ID: S016
+
+    This rule checks for the following statements:
+
+    - ALTER USER
+    - sp_change_users_login
+    - sp_migrate_user_to_contained
+    """
+
+    rule = "NoAlterUser"
+    id = "S016"
+
+    def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
+        super().check(statements)
+        for statement in SQLParser.get_ddl_statements(statements, "alter"):
+            if re.match(r"^\s*alter\s+user", str(statement).casefold()):
+                self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_calls(statements, "sp_change_users_login"):
+            self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_calls(statements, "sp_migrate_user_to_contained"):
+            self.handle_match(statement)
+
+
+class NoCreateDatabase(BaseRule):
+    """Checks for any SQL statements that create a database.
+
+    ID: S017
+
+    This rule checks for the following statements:
+
+    - CREATE DATABASE
+    - sp_attach_db
+    - sp_attach_single_file_db
+    - DBCC CLONEDATABASE
+    """
+
+    rule = "NoCreateDatabase"
+    id = "S017"
+
+    def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
+        super().check(statements)
+        for statement in SQLParser.get_ddl_statements(statements, "create"):
+            if re.match(r"^\s*create\s+database", str(statement).casefold()):
+                self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_calls(statements, "sp_attach_db"):
+            self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_calls(statements, "sp_attach_single_file_db"):
+            self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_calls(statements, "CLONEDATABASE"):
+            if statement.is_group and statement.parent.tokens[0].match(
+                None,
+                SQLParser._to_case_insensitive_regex("dbcc"),
+                regex=True,
+            ):
+                self.handle_match(statement)
+
+
+class NoDropDatabase(BaseRule):
+    """Checks for any SQL statements that drop a database.
+
+    ID: S018
+
+    This rule checks for the following statements:
+
+    - DROP DATABASE
+    - sp_detach_db
+    - sp_dbremove
+    """
+
+    rule = "NoDropDatabase"
+    id = "S018"
+
+    def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
+        super().check(statements)
+        for statement in SQLParser.get_ddl_statements(statements, "drop"):
+            if re.match(r"^\s*drop\s+database", str(statement).casefold()):
+                self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_calls(statements, "sp_detach_db"):
+            self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_calls(statements, "sp_dbremove"):
+            self.handle_match(statement)
+
+
+class NoAlterDatabaseFiles(BaseRule):
+    """Checks for any SQL statements that alter a database file.
+
+    ID: S019
+
+    This rule checks for the following statements:
+
+    - ALTER DATABASE ADD FILE
+    - ALTER DATABASE ADD LOG FILE
+    - ALTER DATABASE ADD FILEGROUP
+    - ALTER DATABASE REMOVE FILE
+    - ALTER DATABASE REMOVE LOG FILE
+    - ALTER DATABASE REMOVE FILEGROUP
+    - ALTER DATABASE MODIFY FILE
+    - ALTER DATABASE MODIFY LOG FILE
+    - ALTER DATABASE MODIFY FILEGROUP
+    - DBCC SHRINKDATABASE
+    - DBCC SHRINKFILE
+    """
+
+    rule = "NoAlterDatabase"
+    id = "S019"
+
+    def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
+        super().check(statements)
+        for statement in SQLParser.get_ddl_statements(statements, "alter"):
+            if re.match(
+                r"^\s*alter\s+database\s+\w+\s+(add|remove|modify)\s+(file|log file|filegroup)",
+                str(statement).casefold(),
+            ):
+                self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_calls(statements, "SHRINKDATABASE"):
+            if statement.is_group and statement.parent.tokens[0].match(
+                None,
+                SQLParser._to_case_insensitive_regex("dbcc"),
+                regex=True,
+            ):
+                self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_calls(statements, "SHRINKFILE"):
+            if statement.is_group and statement.parent.tokens[0].match(
+                None,
+                SQLParser._to_case_insensitive_regex("dbcc"),
+                regex=True,
+            ):
+                self.handle_match(statement)
