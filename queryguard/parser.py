@@ -119,33 +119,3 @@ class SQLParser:
                 regex=True,
             ):
                 yield item.parent.parent
-
-    @staticmethod
-    def acts_on_type(statement: sqlparse.sql.Statement, type: str) -> bool:
-        """Determines if the given sqlparse.sql.Statement object acts on the given type.
-
-        Args:
-            statement (sqlparse.sql.Statement): The sqlparse.sql.Statement object to check.
-            type (str): The type to check for.
-
-        Returns:
-            bool: True if the statement acts on the given type, False otherwise.
-        """
-        logger.debug(f"Checking if statement acts on type {type}")
-
-        for token in statement.tokens:
-            if token.is_group:
-                result = SQLParser.acts_on_type(token, type)
-                if result:
-                    return True
-            if token.match(
-                sqlparse.tokens.Name,
-                SQLParser._to_case_insensitive_regex(type),
-                regex=True,
-            ) or token.match(
-                sqlparse.tokens.Keyword,
-                SQLParser._to_case_insensitive_regex(type),
-                regex=True,
-            ):
-                return True
-        return False
