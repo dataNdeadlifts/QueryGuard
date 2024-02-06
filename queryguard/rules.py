@@ -566,10 +566,53 @@ class NoDropDatabase(BaseRule):
             self.handle_match(statement)
 
 
+class NoAlterDatabaseAll(BaseRule):
+    """Checks for any SQL statements that alter any database configuration.
+
+    ID: S019
+
+    This rule checks for the following statements:
+
+    - ALTER DATABASE
+    - DBCC SHRINKDATABASE
+    - DBCC SHRINKFILE
+    """
+
+    # TODO: Add more checks for dbcc or procedures that alter database configuration
+
+    rule = "NoAlterDatabaseAll"
+    id = "S019"
+
+    def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
+        super().check(statements)
+        for statement in SQLParser.get_ddl_statements(statements, "alter"):
+            if re.match(
+                r"^\s*alter\s+database",
+                str(statement).casefold(),
+            ):
+                self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_calls(statements, "SHRINKDATABASE"):
+            if statement.is_group and statement.parent.tokens[0].match(
+                None,
+                SQLParser._to_case_insensitive_regex("dbcc"),
+                regex=True,
+            ):
+                self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_calls(statements, "SHRINKFILE"):
+            if statement.is_group and statement.parent.tokens[0].match(
+                None,
+                SQLParser._to_case_insensitive_regex("dbcc"),
+                regex=True,
+            ):
+                self.handle_match(statement)
+
+
 class NoAlterDatabaseFiles(BaseRule):
     """Checks for any SQL statements that alter a database file.
 
-    ID: S019
+    ID: S020
 
     This rule checks for the following statements:
 
@@ -587,7 +630,7 @@ class NoAlterDatabaseFiles(BaseRule):
     """
 
     rule = "NoAlterDatabase"
-    id = "S019"
+    id = "S020"
 
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
@@ -611,5 +654,32 @@ class NoAlterDatabaseFiles(BaseRule):
                 None,
                 SQLParser._to_case_insensitive_regex("dbcc"),
                 regex=True,
+            ):
+                self.handle_match(statement)
+
+
+# TODO: NoCreateDatabaseAudit, NoDropDatabaseAudit, NoAlterDatabaseAudit
+# TODO: NoCreateServerAudit, NoDropServerAudit, NoAlterServerAudit
+
+
+class NoAlterServerConfiguration(BaseRule):
+    """Checks for any SQL statements that alter the server configuration.
+
+    ID: S021
+
+    This rule checks for the following statements:
+
+    - ALTER SERVER CONFIGURATION
+    """
+
+    rule = "NoAlterServerConfiguration"
+    id = "S021"
+
+    def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
+        super().check(statements)
+        for statement in SQLParser.get_ddl_statements(statements, "alter"):
+            if re.match(
+                r"^\s*alter\s+server\s+configuration",
+                str(statement).casefold(),
             ):
                 self.handle_match(statement)
