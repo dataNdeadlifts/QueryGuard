@@ -2,6 +2,13 @@
 
 
 
+## v0.3.1-beta.2 (2024-02-09)
+
+### Fix
+
+* fix: issue with utf-16 files ([`651608a`](https://github.com/dataNdeadlifts/QueryGuard/commit/651608a4830de97f35a1fbcf6de6e33486928b5a))
+
+
 ## v0.3.1-beta.1 (2024-02-09)
 
 ### Fix
