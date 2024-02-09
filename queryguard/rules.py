@@ -91,17 +91,20 @@ class NoCreateLogin(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "create"):
-            # using regex here to avoid false positive results for items like create user for login
-            if re.match(r"^\s*(go|;)*\s*create\s+login", str(statement).casefold()):
+            ddl_token = SQLParser.get_ddl_token(statement, "create")
+            next_token = SQLParser.get_next_token(statement, ddl_token)
+            if next_token and next_token.match(
+                ttype=sqlparse.tokens.Name, values=SQLParser.to_case_insensitive_regex("login"), regex=True
+            ):
                 self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_grantlogin"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_grantlogin"):
             self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_addlogin"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_addlogin"):
             self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_addremotelogin"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_addremotelogin"):
             self.handle_match(statement)
 
 
@@ -124,16 +127,20 @@ class NoDropLogin(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "drop"):
-            if re.match(r"^\s*(go|;)*\s*drop\s+login", str(statement).casefold()):
+            ddl_token = SQLParser.get_ddl_token(statement, "drop")
+            next_token = SQLParser.get_next_token(statement, ddl_token)
+            if next_token and next_token.match(
+                ttype=sqlparse.tokens.Name, values=SQLParser.to_case_insensitive_regex("login"), regex=True
+            ):
                 self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_droplogin"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_droplogin"):
             self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_dropremotelogin"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_dropremotelogin"):
             self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_revokelogin"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_revokelogin"):
             self.handle_match(statement)
 
 
@@ -158,23 +165,27 @@ class NoAlterLogin(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "alter"):
-            if re.match(r"^\s*(go|;)*\s*alter\s+login", str(statement).casefold()):
+            ddl_token = SQLParser.get_ddl_token(statement, "alter")
+            next_token = SQLParser.get_next_token(statement, ddl_token)
+            if next_token and next_token.match(
+                ttype=sqlparse.tokens.Name, values=SQLParser.to_case_insensitive_regex("login"), regex=True
+            ):
                 self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_denylogin"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_denylogin"):
             self.handle_match(statement)
 
         # TODO: Update to allow report functionality of sp_change_users_login
-        for statement in SQLParser.get_procedure_calls(statements, "sp_change_users_login"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_change_users_login"):
             self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_password"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_password"):
             self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_defaultdb"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_defaultdb"):
             self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_defaultlanguage"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_defaultlanguage"):
             self.handle_match(statement)
 
 
@@ -194,8 +205,15 @@ class NoCreateServerRole(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "create"):
-            if re.match(r"^\s*(go|;)*\s*create\s+server\s+role", str(statement).casefold()):
-                self.handle_match(statement)
+            ddl_token = SQLParser.get_ddl_token(statement, "create")
+
+            next_token = SQLParser.get_next_token(statement, ddl_token)
+            if next_token and next_token.match(
+                ttype=sqlparse.tokens.Name, values=SQLParser.to_case_insensitive_regex("server"), regex=True
+            ):
+                next_token = SQLParser.get_next_token(statement, next_token)
+                if next_token and next_token.match(ttype=sqlparse.tokens.Keyword, values="role"):
+                    self.handle_match(statement)
 
 
 class NoDropServerRole(BaseRule):
@@ -214,8 +232,15 @@ class NoDropServerRole(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "drop"):
-            if re.match(r"^\s*(go|;)*\s*drop\s+server\s+role", str(statement).casefold()):
-                self.handle_match(statement)
+            ddl_token = SQLParser.get_ddl_token(statement, "drop")
+
+            next_token = SQLParser.get_next_token(statement, ddl_token)
+            if next_token and next_token.match(
+                ttype=sqlparse.tokens.Name, values=SQLParser.to_case_insensitive_regex("server"), regex=True
+            ):
+                next_token = SQLParser.get_next_token(statement, next_token)
+                if next_token and next_token.match(ttype=sqlparse.tokens.Keyword, values="role"):
+                    self.handle_match(statement)
 
 
 class NoAlterServerRole(BaseRule):
@@ -236,13 +261,20 @@ class NoAlterServerRole(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "alter"):
-            if re.match(r"^\s*(go|;)*\s*alter\s+server\s+role", str(statement).casefold()):
-                self.handle_match(statement)
+            ddl_token = SQLParser.get_ddl_token(statement, "alter")
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_addsrvrolemember"):
+            next_token = SQLParser.get_next_token(statement, ddl_token)
+            if next_token and next_token.match(
+                ttype=sqlparse.tokens.Name, values=SQLParser.to_case_insensitive_regex("server"), regex=True
+            ):
+                next_token = SQLParser.get_next_token(statement, next_token)
+                if next_token and next_token.match(ttype=sqlparse.tokens.Keyword, values="role"):
+                    self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_statements(statements, "sp_addsrvrolemember"):
             self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_dropsrvrolemember"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_dropsrvrolemember"):
             self.handle_match(statement)
 
 
@@ -263,10 +295,12 @@ class NoCreateDatabaseRole(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "create"):
-            if re.match(r"^\s*(go|;)*\s*create\s+role", str(statement).casefold()):
+            ddl_token = SQLParser.get_ddl_token(statement, "create")
+            next_token = SQLParser.get_next_token(statement, ddl_token)
+            if next_token and next_token.match(ttype=sqlparse.tokens.Keyword, values="role"):
                 self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_addrole"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_addrole"):
             self.handle_match(statement)
 
 
@@ -287,10 +321,12 @@ class NoDropDatabaseRole(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "drop"):
-            if re.match(r"^\s*(go|;)*\s*drop\s+role", str(statement).casefold()):
+            ddl_token = SQLParser.get_ddl_token(statement, "drop")
+            next_token = SQLParser.get_next_token(statement, ddl_token)
+            if next_token and next_token.match(ttype=sqlparse.tokens.Keyword, values="role"):
                 self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_droprole"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_droprole"):
             self.handle_match(statement)
 
 
@@ -312,13 +348,15 @@ class NoAlterDatabaseRole(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "alter"):
-            if re.match(r"^\s*(go|;)*\s*alter\s+role", str(statement).casefold()):
+            ddl_token = SQLParser.get_ddl_token(statement, "alter")
+            next_token = SQLParser.get_next_token(statement, ddl_token)
+            if next_token and next_token.match(ttype=sqlparse.tokens.Keyword, values="role"):
                 self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_addrolemember"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_addrolemember"):
             self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_droprolemember"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_droprolemember"):
             self.handle_match(statement)
 
 
@@ -339,10 +377,17 @@ class NoCreateAppRole(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "create"):
-            if re.match(r"^\s*(go|;)*\s*create\s+application\s+role", str(statement).casefold()):
-                self.handle_match(statement)
+            ddl_token = SQLParser.get_ddl_token(statement, "create")
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_addapprole"):
+            next_token = SQLParser.get_next_token(statement, ddl_token)
+            if next_token and next_token.match(
+                ttype=sqlparse.tokens.Name, values=SQLParser.to_case_insensitive_regex("application"), regex=True
+            ):
+                next_token = SQLParser.get_next_token(statement, next_token)
+                if next_token and next_token.match(ttype=sqlparse.tokens.Keyword, values="role"):
+                    self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_statements(statements, "sp_addapprole"):
             self.handle_match(statement)
 
 
@@ -363,10 +408,17 @@ class NoDropAppRole(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "drop"):
-            if re.match(r"^\s*(go|;)*\s*drop\s+application\s+role", str(statement).casefold()):
-                self.handle_match(statement)
+            ddl_token = SQLParser.get_ddl_token(statement, "drop")
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_dropapprole"):
+            next_token = SQLParser.get_next_token(statement, ddl_token)
+            if next_token and next_token.match(
+                ttype=sqlparse.tokens.Name, values=SQLParser.to_case_insensitive_regex("application"), regex=True
+            ):
+                next_token = SQLParser.get_next_token(statement, next_token)
+                if next_token and next_token.match(ttype=sqlparse.tokens.Keyword, values="role"):
+                    self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_statements(statements, "sp_dropapprole"):
             self.handle_match(statement)
 
 
@@ -387,10 +439,17 @@ class NoAlterAppRole(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "alter"):
-            if re.match(r"^\s*(go|;)*\s*alter\s+application\s+role", str(statement).casefold()):
-                self.handle_match(statement)
+            ddl_token = SQLParser.get_ddl_token(statement, "alter")
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_approlepassword"):
+            next_token = SQLParser.get_next_token(statement, ddl_token)
+            if next_token and next_token.match(
+                ttype=sqlparse.tokens.Name, values=SQLParser.to_case_insensitive_regex("application"), regex=True
+            ):
+                next_token = SQLParser.get_next_token(statement, next_token)
+                if next_token and next_token.match(ttype=sqlparse.tokens.Keyword, values="role"):
+                    self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_statements(statements, "sp_approlepassword"):
             self.handle_match(statement)
 
 
@@ -410,10 +469,13 @@ class NoDynamicSQL(BaseRule):
 
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
-        for statement in SQLParser.get_exec_string(statements):
-            self.handle_match(statement)
+        for statement in SQLParser.get_keyword_statements(statements, "exec"):
+            exec_token = SQLParser.get_keyword_token(statement, "exec")
+            next_token = SQLParser.get_next_token(statement, exec_token)
+            if next_token and next_token.match(ttype=sqlparse.tokens.Punctuation, values="("):
+                self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_executesql"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_executesql"):
             self.handle_match(statement)
 
 
@@ -435,13 +497,15 @@ class NoCreateUser(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "create"):
-            if re.match(r"^\s*(go|;)*\s*create\s+user", str(statement).casefold()):
+            ddl_token = SQLParser.get_ddl_token(statement, "create")
+            next_token = SQLParser.get_next_token(statement, ddl_token)
+            if next_token and next_token.match(ttype=sqlparse.tokens.Keyword, values="user"):
                 self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_adduser"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_adduser"):
             self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_grantdbaccess"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_grantdbaccess"):
             self.handle_match(statement)
 
 
@@ -457,19 +521,21 @@ class NoDropUser(BaseRule):
     - sp_revokedbaccess
     """
 
-    rule = "NoDropLogin"
+    rule = "NoDropUser"
     id = "S015"
 
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "drop"):
-            if re.match(r"^\s*(go|;)*\s*drop\s+user", str(statement).casefold()):
+            ddl_token = SQLParser.get_ddl_token(statement, "drop")
+            next_token = SQLParser.get_next_token(statement, ddl_token)
+            if next_token and next_token.match(ttype=sqlparse.tokens.Keyword, values="user"):
                 self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_dropuser"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_dropuser"):
             self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_revokedbaccess"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_revokedbaccess"):
             self.handle_match(statement)
 
 
@@ -491,13 +557,15 @@ class NoAlterUser(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "alter"):
-            if re.match(r"^\s*(go|;)*\s*alter\s+user", str(statement).casefold()):
+            ddl_token = SQLParser.get_ddl_token(statement, "alter")
+            next_token = SQLParser.get_next_token(statement, ddl_token)
+            if next_token and next_token.match(ttype=sqlparse.tokens.Keyword, values="user"):
                 self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_change_users_login"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_change_users_login"):
             self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_migrate_user_to_contained"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_migrate_user_to_contained"):
             self.handle_match(statement)
 
 
@@ -520,21 +588,19 @@ class NoCreateDatabase(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "create"):
-            if re.match(r"^\s*(go|;)*\s*create\s+database", str(statement).casefold()):
+            ddl_token = SQLParser.get_ddl_token(statement, "create")
+            next_token = SQLParser.get_next_token(statement, ddl_token)
+            if next_token and next_token.match(ttype=sqlparse.tokens.Keyword, values="database"):
                 self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_attach_db"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_attach_db"):
             self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_attach_single_file_db"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_attach_single_file_db"):
             self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "CLONEDATABASE"):
-            if statement.is_group and statement.parent.tokens[0].match(
-                None,
-                SQLParser._to_case_insensitive_regex("dbcc"),
-                regex=True,
-            ):
+        for statement in SQLParser.get_procedure_statements(statements, "dbcc"):
+            if SQLParser.get_procedure_token(statement, "CLONEDATABASE"):
                 self.handle_match(statement)
 
 
@@ -556,13 +622,15 @@ class NoDropDatabase(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "drop"):
-            if re.match(r"^\s*(go|;)*\s*drop\s+database", str(statement).casefold()):
+            ddl_token = SQLParser.get_ddl_token(statement, "drop")
+            next_token = SQLParser.get_next_token(statement, ddl_token)
+            if next_token and next_token.match(ttype=sqlparse.tokens.Keyword, values="database"):
                 self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_detach_db"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_detach_db"):
             self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "sp_dbremove"):
+        for statement in SQLParser.get_procedure_statements(statements, "sp_dbremove"):
             self.handle_match(statement)
 
 
@@ -586,26 +654,17 @@ class NoAlterDatabaseAll(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "alter"):
-            if re.match(
-                r"^\s*(go|;)*\s*alter\s+database",
-                str(statement).casefold(),
-            ):
+            ddl_token = SQLParser.get_ddl_token(statement, "alter")
+            next_token = SQLParser.get_next_token(statement, ddl_token)
+            if next_token and next_token.match(ttype=sqlparse.tokens.Keyword, values="database"):
                 self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "SHRINKDATABASE"):
-            if statement.is_group and statement.parent.tokens[0].match(
-                None,
-                SQLParser._to_case_insensitive_regex("dbcc"),
-                regex=True,
-            ):
+        for statement in SQLParser.get_procedure_statements(statements, "dbcc"):
+            if SQLParser.get_procedure_token(statement, "SHRINKDATABASE"):
                 self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "SHRINKFILE"):
-            if statement.is_group and statement.parent.tokens[0].match(
-                None,
-                SQLParser._to_case_insensitive_regex("dbcc"),
-                regex=True,
-            ):
+        for statement in SQLParser.get_procedure_statements(statements, "dbcc"):
+            if SQLParser.get_procedure_token(statement, "SHRINKFILE"):
                 self.handle_match(statement)
 
 
@@ -636,25 +695,17 @@ class NoAlterDatabaseFiles(BaseRule):
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "alter"):
             if re.match(
-                r"^\s*(go|;)*\s*alter\s+database\s+\w+\s+(add|remove|modify)\s+(file|log file|filegroup)",
+                r"alter\s+database\s+\w+\s+(add|remove|modify)\s+(file|log file|filegroup)",
                 str(statement).casefold(),
             ):
                 self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "SHRINKDATABASE"):
-            if statement.is_group and statement.parent.tokens[0].match(
-                None,
-                SQLParser._to_case_insensitive_regex("dbcc"),
-                regex=True,
-            ):
+        for statement in SQLParser.get_procedure_statements(statements, "dbcc"):
+            if SQLParser.get_procedure_token(statement, "SHRINKDATABASE"):
                 self.handle_match(statement)
 
-        for statement in SQLParser.get_procedure_calls(statements, "SHRINKFILE"):
-            if statement.is_group and statement.parent.tokens[0].match(
-                None,
-                SQLParser._to_case_insensitive_regex("dbcc"),
-                regex=True,
-            ):
+        for statement in SQLParser.get_procedure_statements(statements, "dbcc"):
+            if SQLParser.get_procedure_token(statement, "SHRINKFILE"):
                 self.handle_match(statement)
 
 
@@ -678,8 +729,14 @@ class NoAlterServerConfiguration(BaseRule):
     def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
         super().check(statements)
         for statement in SQLParser.get_ddl_statements(statements, "alter"):
-            if re.match(
-                r"^\s*(go|;)*\s*alter\s+server\s+configuration",
-                str(statement).casefold(),
+            ddl_token = SQLParser.get_ddl_token(statement, "alter")
+
+            next_token = SQLParser.get_next_token(statement, ddl_token)
+            if next_token and next_token.match(
+                ttype=sqlparse.tokens.Name, values=SQLParser.to_case_insensitive_regex("server"), regex=True
             ):
-                self.handle_match(statement)
+                next_token = SQLParser.get_next_token(statement, next_token)
+                if next_token and next_token.match(
+                    ttype=sqlparse.tokens.Name, values=SQLParser.to_case_insensitive_regex("configuration"), regex=True
+                ):
+                    self.handle_match(statement)
