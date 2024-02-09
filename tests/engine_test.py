@@ -22,6 +22,13 @@ def sample_file(tmp_path: Path) -> Path:
     return file_path
 
 
+@pytest.fixture  # type: ignore[misc]
+def sample_utf_16_file(tmp_path: Path) -> Path:
+    file_path = tmp_path / "test_utf_16.sql"
+    file_path.write_text("SELECT * FROM users;", encoding="utf-16")
+    return file_path
+
+
 class TestEngine:
     def test_file_evaluate_no_violations(self, sample_file: Path) -> None:
         file = File(sample_file)
@@ -29,6 +36,13 @@ class TestEngine:
         assert file.status == "Passed ✅"
         assert len(file.violations) == 0
         assert file.__repr__() == f"File(path={sample_file!s}, status=Passed ✅)"
+
+    def test_file_evaluate_no_violations_utf_16(self, sample_utf_16_file: Path) -> None:
+        file = File(sample_utf_16_file)
+        file.evaluate([])
+        assert file.status == "Passed ✅"
+        assert len(file.violations) == 0
+        assert file.__repr__() == f"File(path={sample_utf_16_file!s}, status=Passed ✅)"
 
     def test_file_evaluate_with_violations(self, sample_file: Path) -> None:
         class TestRule:
