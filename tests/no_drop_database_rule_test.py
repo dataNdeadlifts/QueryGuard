@@ -10,18 +10,18 @@ from queryguard.rules import NoDropDatabase
 class TestNoDropDatabase:
     def test_check_method_1(self) -> None:
         rule = NoDropDatabase()
-        statements = SQLParser.get_statements("DROP DATABASE test_database;")
+        statements = SQLParser.get_all_statements("DROP DATABASE test_database;")
         with pytest.raises(RuleViolation):
             rule.check(statements)
 
     def test_check_method_2(self) -> None:
         rule = NoDropDatabase()
-        statements = SQLParser.get_statements("EXEC sp_detach_db 'test_database';")
+        statements = SQLParser.get_all_statements("EXEC sp_detach_db 'test_database';")
         with pytest.raises(RuleViolation):
             rule.check(statements)
 
     def test_check_method_3(self) -> None:
         rule = NoDropDatabase()
-        statements = SQLParser.get_statements("EXEC sp_dbremove 'test_database';")
+        statements = SQLParser.get_all_statements("EXEC sp_dbremove 'test_database';")
         with pytest.raises(RuleViolation):
             rule.check(statements)

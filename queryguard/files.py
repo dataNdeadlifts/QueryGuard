@@ -82,7 +82,13 @@ class File:
             None
         """
         logger.debug(f"Evaluating rules against {self.path}")
-        statements: tuple[sqlparse.sql.Statement] = SQLParser.get_statements(self.path.read_text())
+
+        try:
+            text = self.path.read_text(encoding="utf-8", errors="strict")
+        except UnicodeDecodeError:
+            text = self.path.read_text(encoding="utf-16", errors="strict")
+
+        statements: tuple[sqlparse.sql.Statement] = SQLParser.get_all_statements(text)
         for rule in rules:
             try:
                 rule().check(statements)

@@ -11,7 +11,7 @@
 node_modules
 coverage.*
 dist
-compose-dev.yaml
+docker-compose.yml
 TODO
 /ci
 /node_modules

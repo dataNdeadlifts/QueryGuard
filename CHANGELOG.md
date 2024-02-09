@@ -2,6 +2,21 @@
 
 
 
+## v0.3.1-beta.2 (2024-02-09)
+
+### Fix
+
+* fix: issue with utf-16 files ([`651608a`](https://github.com/dataNdeadlifts/QueryGuard/commit/651608a4830de97f35a1fbcf6de6e33486928b5a))
+
+
+## v0.3.1-beta.1 (2024-02-09)
+
+### Fix
+
+* fix: false positive results for NoDynamicSQL rule
+refactor: update SQLParser to simplify quality rule definitions ([`d7bf7c2`](https://github.com/dataNdeadlifts/QueryGuard/commit/d7bf7c2206f940e570d667c5161563d1c11769e4))
+
+
 ## v0.3.0 (2024-02-06)
 
 ### Feature
