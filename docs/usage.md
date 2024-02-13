@@ -59,7 +59,7 @@ Specify a list of enabled rules to use for evaluation.
 
 **Default:** `["S"]`
 
-Example: Only evaluate rule id's S001 and S002 at the command line.
+**Example:** Only evaluate rule id's S001 and S002 at the command line.
 
 `qg . --select S001, S002`
 
