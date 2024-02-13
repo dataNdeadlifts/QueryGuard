@@ -228,16 +228,10 @@ class SQLParser:
         logger.debug(f"Getting arguments supplied to {procedure_token}")
 
         procedure_arguments: list[dict[str, str | None]] = []
-        max_depth = 100
-        depth = 0
 
         token_iterator = SQLParser.get_next_tokens(statement, procedure_token)
         while True:
             try:
-                depth += 1
-                if depth > max_depth:
-                    break
-
                 token = next(token_iterator)
 
                 if token.match(ttype=sqlparse.tokens.Punctuation, values=","):
