@@ -4,9 +4,10 @@ import logging
 import os
 import sys
 from abc import ABC, abstractmethod
+from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterable, Literal, TypedDict
+from typing import Any, Literal, TypedDict
 
 from rich.console import Console
 

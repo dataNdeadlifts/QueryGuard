@@ -2,10 +2,9 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import cast
+from typing import Annotated, cast
 
 import typer
-from typing_extensions import Annotated
 
 from queryguard import config
 from queryguard.engine import RulesEngine

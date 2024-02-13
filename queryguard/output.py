@@ -4,7 +4,8 @@ import json
 import logging
 import sys
 from abc import ABC, abstractmethod
-from typing import Any, Iterable, TypeVar
+from collections.abc import Iterable
+from typing import Any, TypeVar
 
 from rich import progress
 from rich.console import Console

@@ -25,7 +25,7 @@ pytest = "^7.4.3"
 pre-commit = "^3.5.0"
 mypy = "^1.8.0"
 lxml = "^4.9.4"
-ruff = "^0.1.9"
+ruff = "^0.2.1"
 mkdocs = "^1.5.3"
 mkdocstrings = { extras = ["python"], version = "^0.24.0" }
 python-semantic-release = "^8.7.0"
@@ -60,7 +60,7 @@ select = [
     "UP",  # pyupgrade
 ]
 line-length = 120
-target-version = "py38"
+target-version = "py39"
 ignore = [
     "ANN101", # ANN101 Missing type annotation for `self` in method
     "D100",   # D100 Missing docstring in public module
