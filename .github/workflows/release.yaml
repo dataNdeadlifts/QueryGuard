@@ -25,7 +25,7 @@ jobs:
 
       - name: Python Semantic Release
         id: release
-        uses: python-semantic-release/python-semantic-release@v8.7.2
+        uses: python-semantic-release/python-semantic-release@v9.0.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -55,6 +55,8 @@ jobs:
       - name: Publish package to PyPI
         uses: pypa/gh-action-pypi-publish@v1.8.11
         if: ${{ steps.release.outputs.released }} == 'true'
+        with:
+          skip-existing: true
 
       - name: Publish package to GitHub Release
         uses: python-semantic-release/upload-to-gh-release@main

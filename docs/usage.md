@@ -59,7 +59,7 @@ Specify a list of enabled rules to use for evaluation.
 
 **Default:** `["S"]`
 
-Example: Only evaluate rule id's S001 and S002 at the command line.
+**Example:** Only evaluate rule id's S001 and S002 at the command line.
 
 `qg . --select S001, S002`
 
@@ -86,7 +86,7 @@ Specify a list of enabled rules to ignore for evaluation.
 
 **Default:** `[]`
 
-Example: Skip evaluation of rule id's S001 and S002 at the command line.
+**Example:** Skip evaluation of rule id's S001 and S002 at the command line.
 
 `qg . --ignore S001, S002`
 
@@ -103,4 +103,27 @@ Example: Skip evaluation of rule id's S001 and S002 at the command line.
 ```toml
 [tool.queryguard]
 ignore = ["S001", "S002"]
+```
+
+---
+
+#### output
+
+Set the output format.
+
+**Default:** `"text"`
+
+**Example:** Set the output format to json using the command line.
+
+`qg . --output json`
+
+**Example:** Set the output format to json using an environment variable.
+
+`QUERYGUARD_OUTPUT=json qg .`
+
+**Example:** Set the output format to json using the configuration file.
+
+```toml
+[tool.queryguard]
+output = "json"
 ```

@@ -721,6 +721,7 @@ class NoAlterServerConfiguration(BaseRule):
     This rule checks for the following statements:
 
     - ALTER SERVER CONFIGURATION
+    - sp_configure
     """
 
     rule = "NoAlterServerConfiguration"
@@ -738,5 +739,51 @@ class NoAlterServerConfiguration(BaseRule):
                 next_token = SQLParser.get_next_token(statement, next_token)
                 if next_token and next_token.match(
                     ttype=sqlparse.tokens.Name, values=SQLParser.to_case_insensitive_regex("configuration"), regex=True
+                ):
+                    self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_statements(statements, "sp_configure"):
+            procedure_token = SQLParser.get_procedure_token(statement, "sp_configure")
+            procedure_arguments = SQLParser.get_procedure_args(statement, procedure_token)
+
+            if len(procedure_arguments) > 1:
+                self.handle_match(statement)
+
+
+class NoAlterAuthExceptObject(BaseRule):
+    """Checks for any SQL statements that alters an authorization other than on an object.
+
+    ID: S022
+
+    This rule checks for the following statements:
+
+    - ALTER AUTHORIZATION ON *
+
+    Exceptions:
+
+    - ALTER AUTHORIZATION ON OBJECT
+    """
+
+    rule = "NoAlterAuthExceptObject"
+    id = "S021"
+
+    def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
+        super().check(statements)
+        for statement in SQLParser.get_ddl_statements(statements, "alter"):
+            ddl_token = SQLParser.get_ddl_token(statement, "alter")
+            next_token = SQLParser.get_next_token(statement, ddl_token)
+
+            if next_token and next_token.match(ttype=sqlparse.tokens.Keyword, values="authorization"):
+                next_token = SQLParser.get_next_token(statement, next_token)
+
+            if next_token and next_token.match(ttype=sqlparse.tokens.Keyword, values="on"):
+                potential_class_type = SQLParser.get_next_token(statement, next_token)
+                potential_punctuation = SQLParser.get_next_token(statement, potential_class_type)
+
+                if (
+                    potential_class_type
+                    and potential_punctuation
+                    and potential_punctuation.match(ttype=sqlparse.tokens.Punctuation, values="::")
+                    and not potential_class_type.match(ttype=sqlparse.tokens.Keyword, values="object")
                 ):
                     self.handle_match(statement)

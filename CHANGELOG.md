@@ -2,6 +2,15 @@
 
 
 
+## v0.4.0-beta.1 (2024-02-13)
+
+### Feature
+
+* feat: add NoAlterAuthExceptObject
+feat: add check for sp_configure to NoServerConfiguration
+refactor: add get_procedure_args and get_next_tokens methods to SQLParser ([`aa2042e`](https://github.com/dataNdeadlifts/QueryGuard/commit/aa2042ed001fa13ddbc43a3c71accb4c5c1a9d60))
+
+
 ## v0.3.1 (2024-02-09)
 
 ### Fix

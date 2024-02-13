@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Generator
+from collections.abc import Generator
 
 import sqlparse
 
@@ -169,15 +169,17 @@ class SQLParser:
         return SQLParser.get_token(statement, sqlparse.tokens.Keyword, keyword)
 
     @staticmethod
-    def get_next_token(statement: sqlparse.sql.Statement, token: sqlparse.sql.Token) -> sqlparse.sql.Token | None:
-        """Returns the next token after the given token in the given statement.
+    def get_next_tokens(
+        statement: sqlparse.sql.Statement, token: sqlparse.sql.Token
+    ) -> Generator[sqlparse.sql.Token, None, None]:
+        """Returns a generator beginning at the next token and ending at the last token in the statement.
 
         Args:
             statement (sqlparse.sql.Statement): The Statement object.
             token (sqlparse.sql.Token): The Token object.
 
         Returns:
-            sqlparse.sql.Token: A Token object representing the next non-whitespace token.
+            Generator[sqlparse.sql.Token, None, None]: A generator of the remaining tokens in the statement.
         """
         logger.debug(f"Getting next token for {token}")
 
@@ -189,6 +191,81 @@ class SQLParser:
                 match = True
                 continue
             if match:
-                return item
+                yield item
 
-        return None
+    @staticmethod
+    def get_next_token(statement: sqlparse.sql.Statement, token: sqlparse.sql.Token) -> sqlparse.sql.Token | None:
+        """Returns the next token after the given token in the given statement.
+
+        Args:
+            statement (sqlparse.sql.Statement): The Statement object.
+            token (sqlparse.sql.Token): The Token object.
+
+        Returns:
+            sqlparse.sql.Token: A Token object representing the next non-whitespace token.
+        """
+        return next(SQLParser.get_next_tokens(statement, token), None)
+
+    @staticmethod
+    def get_procedure_args(
+        statement: sqlparse.sql.Statement, procedure_token: sqlparse.sql.Token
+    ) -> list[dict[str, str | None]]:
+        """Retrieves the arguments supplied to a procedure.
+
+        Args:
+            statement (sqlparse.sql.Statement): The SQL statement containing the procedure.
+            procedure_token (sqlparse.sql.Token): The token representing the procedure.
+
+        Returns:
+            list[dict[str, str | None]]: A list of dictionaries representing the procedure arguments.
+                Each dictionary contains the following keys:
+                - 'name': The name of the argument (None for positional arguments).
+                - 'index': The index of the argument.
+                - 'type': The type of the argument ('named' for named arguments, 'positional' for positional arguments).
+                - 'value': The value of the argument (None for named arguments without a value).
+
+        """
+        logger.debug(f"Getting arguments supplied to {procedure_token}")
+
+        procedure_arguments: list[dict[str, str | None]] = []
+
+        token_iterator = SQLParser.get_next_tokens(statement, procedure_token)
+        while True:
+            try:
+                token = next(token_iterator)
+
+                if token.match(ttype=sqlparse.tokens.Punctuation, values=","):
+                    continue
+
+                if token.match(ttype=sqlparse.tokens.Name, values="^@", regex=True):
+                    procedure_argument = {
+                        "name": token.value[1:],
+                        "index": len(procedure_arguments),
+                        "type": "named",
+                        "value": None,
+                    }
+                    token = next(token_iterator)
+                    if token.match(ttype=sqlparse.tokens.Comparison, values="="):
+                        token = next(token_iterator)
+                    procedure_argument["value"] = token.value.strip("'\"").removeprefix("N'").removeprefix('N"')
+                    procedure_arguments.append(procedure_argument)
+                    continue
+
+                if token.ttype in (
+                    sqlparse.tokens.String.Single,
+                    sqlparse.tokens.Number.Integer,
+                    sqlparse.tokens.Number.Float,
+                ):
+                    procedure_argument = {
+                        "name": None,
+                        "index": len(procedure_arguments),
+                        "type": "positional",
+                        "value": token.value.strip("'\"").removeprefix("N'").removeprefix('N"'),
+                    }
+                    procedure_arguments.append(procedure_argument)
+                    continue
+
+            except StopIteration:
+                break
+
+        return procedure_arguments
