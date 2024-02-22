@@ -2,6 +2,18 @@
 
 
 
+## v0.5.0-beta.1 (2024-02-22)
+
+### Feature
+
+* feat: Add NoGrantExceptObjectRule
+feat: Add NoBackupRule
+fix: resolve issues with cli help message
+feat: add version command
+refactor: minor updates to align better with typer cli
+feat: broaden definition of NoDynamicSQL rule ([`34b6077`](https://github.com/dataNdeadlifts/QueryGuard/commit/34b6077d64aad90abc3a189f198c1d87a13789a7))
+
+
 ## v0.4.0 (2024-02-13)
 
 ### Feature
