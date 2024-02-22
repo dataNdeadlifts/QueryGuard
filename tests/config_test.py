@@ -8,6 +8,7 @@ import pytest
 
 from queryguard import rules
 from queryguard.config import BaseSetting, CLIHandler, Config, FileHandler, RequestParams, SelectSetting
+from queryguard.exceptions import TerminatingError
 from queryguard.output import ConsoleText
 
 
@@ -234,7 +235,7 @@ class TestConfig:
         )
         config = Config(request_params)
 
-        with pytest.raises(SystemExit):
+        with pytest.raises(TerminatingError):
             config.get_setting("output")
 
     def test_get_output_handler(self, tmp_path: Path) -> None:

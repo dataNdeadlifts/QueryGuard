@@ -462,6 +462,10 @@ class NoDynamicSQL(BaseRule):
 
     - EXEC (string)
     - sp_executesql
+    - sp_prepexec
+    - sp_execute
+    - sp_cursorprepexec
+    - sp_cursorexecute
     """
 
     rule = "NoDynamicSQL"
@@ -476,6 +480,18 @@ class NoDynamicSQL(BaseRule):
                 self.handle_match(statement)
 
         for statement in SQLParser.get_procedure_statements(statements, "sp_executesql"):
+            self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_statements(statements, "sp_prepexec"):
+            self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_statements(statements, "sp_execute"):
+            self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_statements(statements, "sp_cursorprepexec"):
+            self.handle_match(statement)
+
+        for statement in SQLParser.get_procedure_statements(statements, "sp_cursorexecute"):
             self.handle_match(statement)
 
 
@@ -709,10 +725,6 @@ class NoAlterDatabaseFiles(BaseRule):
                 self.handle_match(statement)
 
 
-# TODO: NoCreateDatabaseAudit, NoDropDatabaseAudit, NoAlterDatabaseAudit
-# TODO: NoCreateServerAudit, NoDropServerAudit, NoAlterServerAudit
-
-
 class NoAlterServerConfiguration(BaseRule):
     """Checks for any SQL statements that alter the server configuration.
 
@@ -787,3 +799,108 @@ class NoAlterAuthExceptObject(BaseRule):
                     and not potential_class_type.match(ttype=sqlparse.tokens.Keyword, values="object")
                 ):
                     self.handle_match(statement)
+
+
+class NoBackup(BaseRule):
+    """Checks for any SQL statements that create a backup.
+
+    ID: S023
+
+    This rule checks for the following statements:
+
+    - BACKUP
+    """
+
+    rule = "NoBackup"
+    id = "S023"
+
+    def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
+        super().check(statements)
+        for statement in SQLParser.get_keyword_statements(statements, "backup"):
+            backup_token = SQLParser.get_keyword_token(statement, "backup")
+            if not SQLParser.get_previous_token(statement, backup_token):
+                self.handle_match(statement)
+
+
+class NoGrantExceptObject(BaseRule):
+    """Checks for any SQL statements that grant permissions except to objects (table, procedure, etc).
+
+    This rule limits the ability to grant permissions to only managing data on an object level. In addition to
+    only allowing grants on objects it also prevents grants that could drop the referenced objects such as alter,
+    take ownership, etc.
+
+    ID: S024
+
+    This rule checks for the following statements:
+
+    - GRANT *
+
+    Exceptions:
+
+    - GRANT DELETE ON OBJECT::*
+    - GRANT EXECUTE ON OBJECT::*
+    - GRANT INSERT ON OBJECT::*
+    - GRANT RECEIVE ON OBJECT::*
+    - GRANT SELECT ON OBJECT::*
+    - GRANT UPDATE ON OBJECT::*
+    - GRANT VIEW DEFINITION ON OBJECT::*
+    - GRANT VIEW CHANGE TRACKING ON OBJECT::*
+    - GRANT EXECUTE ON OBJECT::*
+    - GRANT REFERENCES (*) ON OBJECT::*
+    - GRANT UNMASK ON OBJECT::*
+    """
+
+    rule = "NoGrantExceptObject"
+    id = "S024"
+
+    def check(self, statements: tuple[sqlparse.sql.Statement]) -> None:
+        super().check(statements)
+        for statement in SQLParser.get_keyword_statements(statements, "grant"):
+            grant_token = SQLParser.get_keyword_token(statement, "grant")
+            permission_token = SQLParser.get_next_token(statement, grant_token)
+
+            if not permission_token:
+                continue
+
+            if (
+                permission_token.match(
+                    ttype=sqlparse.tokens.DML,
+                    values=(
+                        SQLParser.to_case_insensitive_regex("delete"),
+                        SQLParser.to_case_insensitive_regex("execute"),
+                        SQLParser.to_case_insensitive_regex("insert"),
+                        SQLParser.to_case_insensitive_regex("select"),
+                        SQLParser.to_case_insensitive_regex("update"),
+                    ),
+                    regex=True,
+                )
+                or permission_token.match(
+                    ttype=sqlparse.tokens.Keyword,
+                    values=(
+                        SQLParser.to_case_insensitive_regex("execute"),
+                        SQLParser.to_case_insensitive_regex("references"),
+                        SQLParser.to_case_insensitive_regex("unmask"),
+                        SQLParser.to_case_insensitive_regex("view"),
+                    ),
+                    regex=True,
+                )
+                or permission_token.match(
+                    ttype=sqlparse.tokens.Name,
+                    values=(
+                        SQLParser.to_case_insensitive_regex("unmask"),
+                        SQLParser.to_case_insensitive_regex("receive"),
+                    ),
+                    regex=True,
+                )
+            ):
+                on_token = SQLParser.get_keyword_token(statement, "on")
+                if not on_token:
+                    self.handle_match(statement)
+
+                next_token = SQLParser.get_next_token(statement, on_token)
+                if next_token and next_token.match(ttype=sqlparse.tokens.Keyword, values=("database", "schema")):
+                    self.handle_match(statement)
+
+                continue
+
+            self.handle_match(statement)

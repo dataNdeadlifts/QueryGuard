@@ -170,22 +170,25 @@ class SQLParser:
 
     @staticmethod
     def get_next_tokens(
-        statement: sqlparse.sql.Statement, token: sqlparse.sql.Token
+        statement: sqlparse.sql.Statement, token: sqlparse.sql.Token, skip_comments: bool = True
     ) -> Generator[sqlparse.sql.Token, None, None]:
         """Returns a generator beginning at the next token and ending at the last token in the statement.
 
         Args:
             statement (sqlparse.sql.Statement): The Statement object.
             token (sqlparse.sql.Token): The Token object.
+            skip_comments (bool): Whether to skip comments (default: True).
 
         Returns:
             Generator[sqlparse.sql.Token, None, None]: A generator of the remaining tokens in the statement.
         """
-        logger.debug(f"Getting next token for {token}")
+        logger.debug(f"Getting next tokens for {token}")
 
         match = False
         for item in statement.flatten():
             if item.is_whitespace:
+                continue
+            if item.ttype[0] == "Comment":
                 continue
             if item == token:
                 match = True
@@ -194,17 +197,49 @@ class SQLParser:
                 yield item
 
     @staticmethod
-    def get_next_token(statement: sqlparse.sql.Statement, token: sqlparse.sql.Token) -> sqlparse.sql.Token | None:
+    def get_next_token(
+        statement: sqlparse.sql.Statement, token: sqlparse.sql.Token, skip_comments: bool = True
+    ) -> sqlparse.sql.Token | None:
         """Returns the next token after the given token in the given statement.
 
         Args:
             statement (sqlparse.sql.Statement): The Statement object.
             token (sqlparse.sql.Token): The Token object.
+            skip_comments (bool): Whether to skip comments (default: True).
 
         Returns:
             sqlparse.sql.Token: A Token object representing the next non-whitespace token.
         """
-        return next(SQLParser.get_next_tokens(statement, token), None)
+        return next(SQLParser.get_next_tokens(statement, token, skip_comments=skip_comments), None)
+
+    @staticmethod
+    def get_previous_token(
+        statement: sqlparse.sql.Statement, token: sqlparse.sql.Token, skip_comments: bool = True
+    ) -> sqlparse.sql.Token | None:
+        """Returns the previous token before the given token in the given statement.
+
+        Args:
+            statement (sqlparse.sql.Statement): The Statement object.
+            token (sqlparse.sql.Token): The Token object.
+            skip_comments (bool): Whether to skip comments (default: True).
+
+        Returns:
+            sqlparse.sql.Token: A Token object representing the next non-whitespace token.
+        """
+        logger.debug(f"Getting previous token for {token}")
+
+        last = None
+        for item in statement.flatten():
+            if item.is_whitespace:
+                continue
+            if item.ttype[0] == "Comment":
+                continue
+            if item == token:
+                break
+
+            last = item
+
+        return last
 
     @staticmethod
     def get_procedure_args(
