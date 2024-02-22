@@ -11,7 +11,7 @@ from click import ClickException
 
 from queryguard.config import RequestParams
 from queryguard.engine import RulesEngine
-from queryguard.exceptions import RuleViolation
+from queryguard.exceptions import RuleViolation, TerminatingError
 from queryguard.files import File
 
 
@@ -150,7 +150,7 @@ class TestEngine:
         )
         engine = RulesEngine(request_params)
 
-        with pytest.raises(SystemExit) as e:
+        with pytest.raises(TerminatingError) as e:
             engine.run()
 
-        assert e.value.code == 1
+        assert e.value.exit_code == 1

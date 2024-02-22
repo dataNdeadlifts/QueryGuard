@@ -45,3 +45,34 @@ class TestNoDynamicSQL:
                                                 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback"
         )
         rule.check(statements)
+
+    def test_check_method_5(self) -> None:
+        rule = NoDynamicSQL()
+        statements = SQLParser.get_all_statements("EXEC sp_execute 1, 49879;")
+        with pytest.raises(RuleViolation):
+            rule.check(statements)
+
+    def test_check_method_6(self) -> None:
+        rule = NoDynamicSQL()
+        statements = SQLParser.get_all_statements(
+            "EXEC sp_prepexec @Out output, N'@P1 nvarchar(128)', N'SELECT @P1', @P1 = 'Hello World';"
+        )
+        with pytest.raises(RuleViolation):
+            rule.check(statements)
+
+    def test_check_method_7(self) -> None:
+        rule = NoDynamicSQL()
+        statements = SQLParser.get_all_statements(
+            "EXEC sp_cursorprepexec @prep_handle OUTPUT, @cursor OUTPUT, N'@fName nvarchar(100)', \
+                N'grant execute to test_user', @scrollopt, @ccopt, @rowcnt OUTPUT, 'test_user';"
+        )
+        with pytest.raises(RuleViolation):
+            rule.check(statements)
+
+    def test_check_method_8(self) -> None:
+        rule = NoDynamicSQL()
+        statements = SQLParser.get_all_statements(
+            "exec sp_cursorexecute @p1, @p2 OUTPUT, @p3 output , @p4 output, @p5 OUTPUT, @p6;"
+        )
+        with pytest.raises(RuleViolation):
+            rule.check(statements)

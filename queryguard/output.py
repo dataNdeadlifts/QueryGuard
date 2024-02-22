@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 import logging
-import sys
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
 from typing import Any, TypeVar
@@ -12,6 +11,7 @@ from rich.console import Console
 from rich.syntax import Syntax
 from rich.table import Table
 
+from queryguard.exceptions import TerminatingError
 from queryguard.files import File, FileEncoder
 
 logger = logging.getLogger(__name__)
@@ -51,11 +51,11 @@ class BaseOutputHandler(ABC):
 
     def exit_violation_found(self) -> None:
         """Ends execution when a violdation was found."""
-        sys.exit(1)
+        raise TerminatingError(exit_code=1)
 
     def exit_violation_not_found(self) -> None:
         """Ends execution when no violdation was found."""
-        sys.exit(0)
+        raise TerminatingError()
 
 
 class ConsoleText(BaseOutputHandler):

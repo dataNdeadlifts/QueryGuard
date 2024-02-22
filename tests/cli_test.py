@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typer.testing import CliRunner
 
+from queryguard import __version__
 from queryguard.cli import cli
 
 
@@ -74,3 +75,18 @@ class TestCLI:
         )
         assert result.exit_code == 0
         assert "DEBUG:" in result.output
+
+    def test_version(self) -> None:
+        runner = CliRunner()
+        result = runner.invoke(
+            cli,
+            ["--version"],
+        )
+        assert result.exit_code == 0
+        assert result.output.strip() == __version__
+
+    def test_missing_path(self) -> None:
+        runner = CliRunner()
+        result = runner.invoke(cli)
+        assert result.exit_code == 2
+        assert "Error: Missing argument 'path'" in result.output

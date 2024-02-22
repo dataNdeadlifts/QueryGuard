@@ -3,6 +3,20 @@ from __future__ import annotations
 import sqlparse
 
 
+class TerminatingError(Exception):
+    """Exception that will stop QueryGuard execution."""
+
+    def __init__(self, exit_code: int = 0) -> None:
+        """Initialize a TerminatingError Exception object.
+
+        Args:
+            exit_code (int): The exit code to use upon sys.exit.
+        """
+        self.exit_code = exit_code
+
+    pass
+
+
 class RuleViolation(Exception):
     """Exception raised when a query does not adhere to the ruleset.
 

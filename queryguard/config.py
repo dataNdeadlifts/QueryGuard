@@ -11,6 +11,8 @@ from typing import Any, Literal, TypedDict
 
 from rich.console import Console
 
+from queryguard.exceptions import TerminatingError
+
 if sys.version_info >= (3, 11):
     import tomllib
 else:
@@ -320,9 +322,9 @@ class OutputSetting(BaseSetting):
         """Post hook for converting id to output handler class instance."""
         try:
             return next(x() for x in output.BaseOutputHandler.__subclasses__() if x.id == value)  # type: ignore
-        except StopIteration:
+        except StopIteration as err:
             Console().print(f"Invalid output handler: {value}", style="bold red")
-            sys.exit(1)
+            raise TerminatingError(exit_code=1) from err
 
 
 class Config:
