@@ -36,7 +36,7 @@ class RequestParams(TypedDict):
 class BaseHandler(ABC):
     """Base class for handling settings lookup."""
 
-    _next_handler: None | BaseHandler = None
+    _next_handler: BaseHandler | None = None
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}()"
@@ -54,7 +54,7 @@ class BaseHandler(ABC):
         return handler
 
     @abstractmethod
-    def get(self, setting: BaseSetting) -> bool | str | Iterable[None | str] | Path:
+    def get(self, setting: BaseSetting) -> bool | str | Iterable[str | None] | Path:
         """Retrieves the value associated with the given key.
 
         Args:
@@ -148,18 +148,18 @@ class FileHandler(BaseHandler):
         Path.home() / ".config/.queryguard.toml",
     )
 
-    def __init__(self, file_path: None | str = None) -> None:
+    def __init__(self, file_path: str | None = None) -> None:
         """Initialize the Config object.
 
         Args:
             file_path (None | list[str], optional): The path to the config file. Defaults to None.
         """
-        self.file: None | Path = Path(file_path) if file_path else None
+        self.file: Path | None = Path(file_path) if file_path else None
         self._data: dict[str, Any] = {}
         self.file, self._data = self._get_config_file()
         self._data.setdefault("tool", {}).setdefault("queryguard", {})
 
-    def _get_config_file(self) -> tuple[None | Path, dict[str, Any]]:
+    def _get_config_file(self) -> tuple[Path | None, dict[str, Any]]:
         if self.file:
             logger.debug(f"Loading configuration from {self.file}")
             with self.file.open(mode="rb") as f:
